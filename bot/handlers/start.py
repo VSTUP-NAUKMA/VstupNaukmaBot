@@ -1,31 +1,23 @@
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler, CommandHandler, MessageHandler, filters
 
+from bot.handlers.operator_chat import send_to_operator, IN_CONVERSATION, connect_with_operator, forward_reply_to_user
+
 CHOOSING = 1
-GET_USER_INPUT = 2
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    print(update.message.chat_id)
     reply_keyboard = [['Бакалавр', 'Магістр'], ['Про могилянку', "Зв'язатись з оператором"]]
     keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
     await update.message.reply_text("Hi!", reply_markup=keyboard_markup)
-    return GET_USER_INPUT
-
-
-
-
-async def get_user_input(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    user_input = update.message.text
-    # Now you can process user_input
-    await update.message.reply_text(f"You said: {user_input}")
-    return ConversationHandler.END
+    return CHOOSING
 
 
 conv_handler = ConversationHandler(
     entry_points=[CommandHandler('start', start)],
     states={
-        GET_USER_INPUT: [
-            MessageHandler(filters.TEXT, get_user_input)]
+        CHOOSING: [MessageHandler(filters.Regex("Зв'язатись з оператором"), connect_with_operator)],
+        IN_CONVERSATION: [MessageHandler(filters.TEXT & ~filters.COMMAND, send_to_operator)]
     },
-    fallbacks=[]
-)
+    fallbacks=[CommandHandler('end', start)])
