@@ -16,5 +16,5 @@ if __name__ == '__main__':
     application.add_handler(conv_handler)
     application.add_handler(reply_handler)
     loop = asyncio.get_event_loop()
-    loop.create_task(clear_pending_replies(43200))  # 12 hours
+    loop.create_task(clear_pending_replies(86400))  # 24 hours
     application.run_polling(allowed_updates=Update.ALL_TYPES)
