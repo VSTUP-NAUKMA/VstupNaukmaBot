@@ -4,7 +4,7 @@ import os
 from telegram import Update, Message, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import CallbackContext, MessageHandler, filters
 
-from bot.config import logger
+from bot.utils.config import logger
 
 CHAT_WITH_OPERATOR = 1
 IN_CONVERSATION = 2
@@ -33,6 +33,7 @@ async def connect_with_operator(update: Update, _: CallbackContext) -> int:
 
 
 async def send_to_operator(update: Update, _: CallbackContext) -> int:
+    #TELEGRAM_SUPPORT_CHAT_ID=-1002086897896
     support_chat_id = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
     user = update.message.from_user
     username = f"@{user.username}" if user.username else "Без ніку 😭"
