@@ -4,7 +4,7 @@ import os
 from telegram import Update, Message, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import CallbackContext, MessageHandler, filters
 
-from bot.config import logger
+from bot.utils.config import logger
 
 CHAT_WITH_OPERATOR = 1
 IN_CONVERSATION = 2

@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 
 
 def load_env():
-    env_path = Path('..') / '.env'
+    dir_of_script = Path(__file__).parent
+    env_path = dir_of_script.parent.parent / '.env'
     load_dotenv(dotenv_path=env_path)
 
 
