@@ -6,7 +6,7 @@ import logging
 from telegram import Update
 from telegram.ext import Application, CallbackQueryHandler
 
-from bot.config import load_env
+from bot.utils.config import load_env
 from bot.handlers.operator_chat import reply_handler, button_callback, clear_pending_replies
 from bot.handlers.start import conv_handler
 
