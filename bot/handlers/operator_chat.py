@@ -2,7 +2,7 @@ import asyncio
 import os
 
 from telegram import Update, Message, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
-from telegram.ext import CallbackContext, MessageHandler, filters
+from telegram.ext import CallbackContext, MessageHandler, filters, ConversationHandler, CommandHandler
 
 from bot.utils.config import logger
 
@@ -16,6 +16,12 @@ async def clear_pending_replies(interval: int):
         await asyncio.sleep(interval)
         pending_replies.clear()
         logger.info("Cleared pending_replies")
+
+
+async def go_back(update: Update, context: CallbackContext) -> int:
+    from bot.handlers.start import start
+    await start(update, context)
+    return ConversationHandler.END
 
 
 async def connect_with_operator(update: Update, _: CallbackContext) -> int:
@@ -33,7 +39,7 @@ async def connect_with_operator(update: Update, _: CallbackContext) -> int:
 
 
 async def send_to_operator(update: Update, _: CallbackContext) -> int:
-    #TELEGRAM_SUPPORT_CHAT_ID=-1002086897896
+    # TELEGRAM_SUPPORT_CHAT_ID=-1002086897896
     support_chat_id = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
     user = update.message.from_user
     username = f"@{user.username}" if user.username else "Без ніку 😭"
@@ -131,4 +137,18 @@ async def send_document(_, chat_id, message):
     await _.bot.send_document(chat_id=chat_id, document=message.document.file_id, caption=message.caption)
 
 
+conv_handler = ConversationHandler(
+    entry_points=[MessageHandler(filters.Regex('Чат-підтримка'), connect_with_operator)],
+    states={
+        IN_CONVERSATION: [
+            MessageHandler(~filters.Regex("Завершити діалог") & (
+                    filters.TEXT | filters.PHOTO | filters.VOICE | filters.Document.ALL |
+                    filters.ANIMATION | filters.Sticker.ALL | filters.VIDEO | filters.FORWARDED), send_to_operator),
+            MessageHandler(filters.Regex("Завершити діалог"), go_back),
+        ],
+    },
+    fallbacks=[CommandHandler('start', connect_with_operator)],
+    name="operator_chat-handler",
+    persistent=True,
+)
 reply_handler = MessageHandler(filters.REPLY, forward_reply_to_user)

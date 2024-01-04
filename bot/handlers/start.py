@@ -1,24 +1,33 @@
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler, CommandHandler, MessageHandler, filters
 
-from bot.handlers.operator_chat import send_to_operator, IN_CONVERSATION, connect_with_operator
+from bot.handlers.dormitory import dormitory, BACK, go_home
+from bot.handlers.operator_chat import connect_with_operator
 
-CHOOSING = 1
+CHOOSING, DORMITORY, IN_CONVERSATION = range(3)
 
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    reply_keyboard = [['Бакалавр', 'Магістр'], ['Про могилянку', "Чат-підтримка"]]
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    reply_keyboard = [['Вступ на навчання', 'Навчальний процес', 'Гуртожитки'],
+                      ['Студентське життя', 'Контакти', 'Чат-підтримка']]
     keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
     await update.message.reply_text("Hi!", reply_markup=keyboard_markup)
-    return CHOOSING
 
 
-conv_handler = ConversationHandler(
+start_handler = ConversationHandler(
     entry_points=[CommandHandler('start', start)],
     states={
-        CHOOSING: [MessageHandler(filters.Regex("Чат-підтримка"), connect_with_operator)],
-        IN_CONVERSATION: [MessageHandler(~filters.Regex("Завершити діалог") & (
-                filters.TEXT | filters.PHOTO | filters.VOICE | filters.Document.ALL | filters.ANIMATION | filters.Sticker.ALL | filters.VIDEO | filters.FORWARDED),
-                                         send_to_operator)]
+        CHOOSING: [
+            MessageHandler(filters.Regex('Гуртожитки'), dormitory),
+            MessageHandler(filters.Regex('Чат-підтримка'), connect_with_operator),
+            # ...
+        ],
     },
-    fallbacks=[MessageHandler(filters.Regex("Завершити діалог"), start)])
+    fallbacks=[MessageHandler(filters.Regex(BACK), go_home)],
+    map_to_parent={
+        CHOOSING: CHOOSING,
+        ConversationHandler.END: ConversationHandler.END
+    },
+    name="main-handler",
+    persistent=True,
+)
