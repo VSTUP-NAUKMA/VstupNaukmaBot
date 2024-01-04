@@ -1,7 +1,7 @@
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler, CommandHandler, MessageHandler, filters
 
-from bot.handlers.dormitory import dormitory, dormitory_handler, BACK, go_back
+from bot.handlers.dormitory import dormitory, dormitory_handler, BACK, go_home
 from bot.handlers.operator_chat import conv_handler, connect_with_operator
 
 CHOOSING, DORMITORY, IN_CONVERSATION = range(3)
@@ -23,7 +23,7 @@ start_handler = ConversationHandler(
             # ...
         ],
     },
-    fallbacks=[MessageHandler(filters.Regex(BACK), go_back)],
+    fallbacks=[MessageHandler(filters.Regex(BACK), go_home)],
     map_to_parent={
         CHOOSING: CHOOSING,
         ConversationHandler.END: ConversationHandler.END

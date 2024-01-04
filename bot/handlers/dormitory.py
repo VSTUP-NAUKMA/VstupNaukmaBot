@@ -7,11 +7,11 @@ from telegram.ext import (
     filters
 )
 
-from bot.utils.fields import VORZEL_TEXT
+from bot.utils.fields import *
 
 BACK = 'Назад'
 HOME = 'На головну'
-(DORMITORY, MASTERS, BACHELORS, FINALIZING, ORDERS, PRICE, TROY, KHARYOK, MAKKEINA, DOCUMENT_REVIEW, VORZEL, ADVICE) = range(12)
+(DORMITORY, MASTERS, BACHELORS, FINALIZING, ORDERS, PRICE, TROYA, KHARYOK, MAKKEINA, DOCUMENT_REVIEW, VORZEL, ADVICE) = range(12)
 
 
 async def dormitory(update: Update, context: CallbackContext) -> int:
@@ -35,7 +35,7 @@ def get_keyboard(*row_buttons, back_button=False):
     return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
 
-async def go_back(update: Update, context: CallbackContext) -> int:
+async def go_home(update: Update, context: CallbackContext) -> int:
     from bot.handlers.start import start
     await start(update, context)
     return ConversationHandler.END
@@ -71,9 +71,9 @@ async def advices(update: Update, context: CallbackContext) -> int:
     return DORMITORY
 
 async def troy(update: Update, context: CallbackContext) -> int:
-    # ...
-    await dormitory(update, context)
-    return DORMITORY
+    reply_markup = get_keyboard([], back_button=True)
+    await update.message.reply_text(TROYA_TEXT, reply_markup=reply_markup)
+    return TROYA
 
 
 async def vorzel(update: Update, context: CallbackContext):
@@ -114,21 +114,26 @@ dormitory_handler = ConversationHandler(
             MessageHandler(filters.Regex('Для бакалаврів'), bachelors),
             MessageHandler(filters.Regex('Поселення'), orders),
             MessageHandler(filters.Regex('Поради'), advices),
-            MessageHandler(filters.Regex(BACK), go_back),
+            MessageHandler(filters.Regex(BACK), go_home),
         ],
         BACHELORS: [
             MessageHandler(filters.Regex('На Троєщині'), troy),
             MessageHandler(filters.Regex('На Харківському шосе'), kharyok),
             MessageHandler(filters.Regex('На вул. Джона Маккейна'), makkeina),
             MessageHandler(filters.Regex(BACK), dormitory),
-            MessageHandler(filters.Regex(HOME), go_back),
+            MessageHandler(filters.Regex(HOME), go_home),
         ],
 
         MASTERS: [
             MessageHandler(filters.Regex('У смт Ворзель'), vorzel),
             MessageHandler(filters.Regex(BACK), dormitory),
-            MessageHandler(filters.Regex(HOME), go_back),
+            MessageHandler(filters.Regex(HOME), go_home),
         ],
+
+        TROYA: [
+            MessageHandler(filters.Regex(BACK), BACHELORS),
+            MessageHandler(filters.Regex(HOME), go_home),
+        ]
     },
     fallbacks=[CommandHandler('start', dormitory)],
 )
