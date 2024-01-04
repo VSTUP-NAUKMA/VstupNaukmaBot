@@ -11,7 +11,7 @@ from bot.utils.fields import *
 
 BACK = 'Назад'
 HOME = 'На головну'
-(DORMITORY, MASTERS, BACHELORS, FINALIZING, ORDERS, PRICE, TROYA, KHARYOK, MAKKEINA, DOCUMENT_REVIEW, VORZEL, ADVICE) = range(12)
+(DORMITORY, MASTERS, BACHELORS, FINALIZING, ORDERS, PRICE, GURTO, DOCUMENT_REVIEW, VORZEL, ADVICE, ORDERS_NEXT) = range(11)
 
 
 async def dormitory(update: Update, context: CallbackContext) -> int:
@@ -50,59 +50,55 @@ async def masters(update: Update, context: CallbackContext) -> int:
 async def bachelors(update: Update, context: CallbackContext) -> int:
     reply_markup = get_keyboard(['На Троєщині', 'На Харківському шосе', 'На вул. Джона Маккейна'], back_button=True)
     await update.message.reply_text('Бакалаврат: Оберіть гуртожиток', reply_markup=reply_markup)
-    # ...
     return BACHELORS
 
 
-
 async def orders(update: Update, context: CallbackContext) -> int:
-    keyboard = [
-        [KeyboardButton(text='Вартість')],
-        [KeyboardButton(text='Перелік документів')],
-        [KeyboardButton(text='Назад')]
-
-    ]
-    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    reply_markup = get_keyboard(['Вартість', 'Перелік документів'], back_button=True)
     await update.message.reply_text('Поселення: Оберіть опцію', reply_markup=reply_markup)
     return ORDERS
 
+
 async def advices(update: Update, context: CallbackContext) -> int:
-    # ...
-    return DORMITORY
+    reply_markup = get_keyboard([], back_button=True)
+    await update.message.reply_text("троя говно маккейна говно харьок топ", reply_markup=reply_markup)
+    return ADVICE
+
 
 async def troy(update: Update, context: CallbackContext) -> int:
     reply_markup = get_keyboard([], back_button=True)
     await update.message.reply_text(TROYA_TEXT, reply_markup=reply_markup)
-    return TROYA
+    return GURTO
 
 
 async def vorzel(update: Update, context: CallbackContext):
     reply_markup = get_keyboard([], back_button=True)
     await update.message.reply_text(VORZEL_TEXT, reply_markup=reply_markup)
-
+    return VORZEL
 
 
 async def kharyok(update: Update, context: CallbackContext) -> int:
     reply_markup = get_keyboard([], back_button=True)
-    return DORMITORY
+    await update.message.reply_text(KHARYOK_TEXT, reply_markup=reply_markup)
+    return GURTO
 
 
 async def makkeina(update: Update, context: CallbackContext) -> int:
-    # ...
-    await dormitory(update, context)
-    return DORMITORY
+    reply_markup = get_keyboard([], back_button=True)
+    await update.message.reply_text(MAKKEINA_TEXT, reply_markup=reply_markup)
+    return GURTO
 
 
 async def price(update: Update, context: CallbackContext) -> int:
-    # ...
-    await dormitory(update, context)
-    return DORMITORY
+    reply_markup = get_keyboard([], back_button=True)
+    await update.message.reply_text("ДОРОГО", reply_markup=reply_markup)
+    return ORDERS_NEXT
 
 
 async def document_review(update: Update, context: CallbackContext) -> int:
-    # ...
-    await dormitory(update, context)
-    return DORMITORY
+    reply_markup = get_keyboard([], back_button=True)
+    await update.message.reply_text(DOCUMENTS_TEXT, reply_markup=reply_markup)
+    return ORDERS_NEXT
 
 
 # Структура ConversationHandler
@@ -130,10 +126,36 @@ dormitory_handler = ConversationHandler(
             MessageHandler(filters.Regex(HOME), go_home),
         ],
 
-        TROYA: [
-            MessageHandler(filters.Regex(BACK), BACHELORS),
+        VORZEL: [
+            MessageHandler(filters.Regex(BACK), dormitory),
+            MessageHandler(filters.Regex(HOME), go_home),
+        ],
+
+        GURTO: [
+            MessageHandler(filters.Regex(BACK), bachelors),
+            MessageHandler(filters.Regex(HOME), go_home),
+        ],
+
+        ORDERS: [
+            MessageHandler(filters.Regex('Вартість'), price),
+            MessageHandler(filters.Regex('Перелік документів'), document_review),
+            MessageHandler(filters.Regex(BACK), dormitory),
+            MessageHandler(filters.Regex(HOME), go_home),
+        ],
+
+        ORDERS_NEXT: [
+            MessageHandler(filters.Regex(BACK), orders),
+            MessageHandler(filters.Regex(HOME), go_home),
+        ],
+
+        ADVICE: [
+            MessageHandler(filters.Regex(BACK), dormitory),
             MessageHandler(filters.Regex(HOME), go_home),
         ]
+
+
     },
     fallbacks=[CommandHandler('start', dormitory)],
+    name="dormitory-handler",
+    persistent=True,
 )
