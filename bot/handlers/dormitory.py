@@ -1,25 +1,20 @@
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
-from telegram.ext import (
-    CallbackContext,
-    CommandHandler,
-    ConversationHandler,
-    MessageHandler,
-    filters
-)
+from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, MessageHandler, filters
 
 from bot.utils.fields import *
 
 BACK = 'Назад'
 HOME = 'На головну'
-(DORMITORY, MASTERS, BACHELORS, FINALIZING, ORDERS, PRICE, GURTO, DOCUMENT_REVIEW, VORZEL, ADVICE, ORDERS_NEXT) = range(11)
+DORMITORY, MASTERS, BACHELORS, FINALIZING, ORDERS, PRICE, GURTO, DOCUMENT_REVIEW, VORZEL, ADVICE, ORDERS_NEXT = range(
+    11)
 
 
 async def dormitory(update: Update, context: CallbackContext) -> int:
     keyboard = [
-        [KeyboardButton(text='Для магістрів')],
-        [KeyboardButton(text='Для бакалаврів')],
-        [KeyboardButton(text='Поселення')],
-        [KeyboardButton(text='Поради')],
+        [KeyboardButton(text='Для магістрів'),
+         KeyboardButton(text='Для бакалаврів')],
+        [KeyboardButton(text='Поселення'),
+         KeyboardButton(text='Поради')],
         [KeyboardButton(text='Назад')]
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
@@ -42,9 +37,9 @@ async def go_home(update: Update, context: CallbackContext) -> int:
 
 
 async def masters(update: Update, context: CallbackContext) -> int:
-    reply_markup = get_keyboard(['У смт Ворзель'], back_button=True)
-    await update.message.reply_text('Магістратура: Оберіть гуртожиток', reply_markup=reply_markup)
-    return MASTERS
+    reply_markup = get_keyboard([], back_button=True)
+    await update.message.reply_text(VORZEL_TEXT, reply_markup=reply_markup)
+    return VORZEL
 
 
 async def bachelors(update: Update, context: CallbackContext) -> int:
@@ -61,7 +56,7 @@ async def orders(update: Update, context: CallbackContext) -> int:
 
 async def advices(update: Update, context: CallbackContext) -> int:
     reply_markup = get_keyboard([], back_button=True)
-    await update.message.reply_text("троя говно маккейна говно харьок топ", reply_markup=reply_markup)
+    await update.message.reply_text('троя говно маккейна говно харьок топ', reply_markup=reply_markup)
     return ADVICE
 
 
@@ -69,12 +64,6 @@ async def troy(update: Update, context: CallbackContext) -> int:
     reply_markup = get_keyboard([], back_button=True)
     await update.message.reply_text(TROYA_TEXT, reply_markup=reply_markup)
     return GURTO
-
-
-async def vorzel(update: Update, context: CallbackContext):
-    reply_markup = get_keyboard([], back_button=True)
-    await update.message.reply_text(VORZEL_TEXT, reply_markup=reply_markup)
-    return VORZEL
 
 
 async def kharyok(update: Update, context: CallbackContext) -> int:
@@ -91,7 +80,7 @@ async def makkeina(update: Update, context: CallbackContext) -> int:
 
 async def price(update: Update, context: CallbackContext) -> int:
     reply_markup = get_keyboard([], back_button=True)
-    await update.message.reply_text("ДОРОГО", reply_markup=reply_markup)
+    await update.message.reply_text('ДОРОГО', reply_markup=reply_markup)
     return ORDERS_NEXT
 
 
@@ -121,7 +110,6 @@ dormitory_handler = ConversationHandler(
         ],
 
         MASTERS: [
-            MessageHandler(filters.Regex('У смт Ворзель'), vorzel),
             MessageHandler(filters.Regex(BACK), dormitory),
             MessageHandler(filters.Regex(HOME), go_home),
         ],
@@ -153,9 +141,8 @@ dormitory_handler = ConversationHandler(
             MessageHandler(filters.Regex(HOME), go_home),
         ]
 
-
     },
     fallbacks=[CommandHandler('start', dormitory)],
-    name="dormitory-handler",
+    name='dormitory-handler',
     persistent=True,
 )
