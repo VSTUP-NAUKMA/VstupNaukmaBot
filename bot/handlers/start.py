@@ -1,8 +1,9 @@
 from telegram import Update, ReplyKeyboardMarkup
-from telegram.ext import ContextTypes, ConversationHandler, CommandHandler, MessageHandler, filters
+from telegram.ext import ConversationHandler, CommandHandler, MessageHandler, filters, ContextTypes
 
 from bot.handlers.dormitory import dormitory, BACK, go_home
 from bot.handlers.operator_chat import connect_with_operator
+from bot.handlers.admission import admission
 
 CHOOSING, DORMITORY, IN_CONVERSATION = range(3)
 
@@ -20,6 +21,7 @@ start_handler = ConversationHandler(
         CHOOSING: [
             MessageHandler(filters.Regex('Гуртожитки'), dormitory),
             MessageHandler(filters.Regex('Чат-підтримка'), connect_with_operator),
+            MessageHandler(filters.Regex('Вступ на навчання'), admission)
             # ...
         ],
     },

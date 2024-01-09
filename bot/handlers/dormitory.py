@@ -9,9 +9,10 @@ from telegram.ext import (
 
 from bot.utils.fields import *
 
-BACK = 'Назад'
-HOME = 'На головну'
-(DORMITORY, MASTERS, BACHELORS, FINALIZING, ORDERS, PRICE, GURTO, DOCUMENT_REVIEW, VORZEL, ADVICE, ORDERS_NEXT) = range(11)
+from bot.utils.utils import get_keyboard, go_home, BACK, HOME
+
+DORMITORY, MASTERS, BACHELORS, FINALIZING, ORDERS, PRICE, GURTO, DOCUMENT_REVIEW, VORZEL, ADVICE, ORDERS_NEXT = range(
+    11)
 
 
 async def dormitory(update: Update, context: CallbackContext) -> int:
@@ -25,20 +26,6 @@ async def dormitory(update: Update, context: CallbackContext) -> int:
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     await update.message.reply_text('Оберіть категорію:', reply_markup=reply_markup)
     return DORMITORY
-
-
-def get_keyboard(*row_buttons, back_button=False):
-    keyboard = [list(map(KeyboardButton, row)) for row in row_buttons]
-    if back_button:
-        keyboard.append([KeyboardButton(BACK)])
-        keyboard.append([KeyboardButton(HOME)])
-    return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
-
-
-async def go_home(update: Update, context: CallbackContext) -> int:
-    from bot.handlers.start import start
-    await start(update, context)
-    return ConversationHandler.END
 
 
 async def masters(update: Update, context: CallbackContext) -> int:
@@ -152,7 +139,6 @@ dormitory_handler = ConversationHandler(
             MessageHandler(filters.Regex(BACK), dormitory),
             MessageHandler(filters.Regex(HOME), go_home),
         ]
-
 
     },
     fallbacks=[CommandHandler('start', dormitory)],
