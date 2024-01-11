@@ -5,6 +5,7 @@ from telegram import Update, Message, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackContext, MessageHandler, filters, ConversationHandler
 
 from bot.utils.config import logger
+from bot.utils.utils import go_home
 
 IN_CONVERSATION = 1
 pending_replies = {}
@@ -15,12 +16,6 @@ async def clear_pending_replies(interval: int):
         await asyncio.sleep(interval)
         pending_replies.clear()
         logger.info('Cleared pending_replies')
-
-
-async def go_home(update: Update, context: CallbackContext) -> int:
-    from bot.handlers.start import start
-    await start(update, context)
-    return ConversationHandler.END
 
 
 async def connect_with_operator(update: Update, _: CallbackContext) -> int:

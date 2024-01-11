@@ -18,12 +18,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 start_handler = ConversationHandler(
     entry_points=[CommandHandler('start', start)],
     states={
-        CHOOSING: [
-            MessageHandler(filters.Regex('Гуртожитки'), dormitory),
-            MessageHandler(filters.Regex('Чат-підтримка'), connect_with_operator),
-            MessageHandler(filters.Regex('Вступ на навчання'), admission)
-            # ...
-        ],
+        CHOOSING: [],
     },
     fallbacks=[MessageHandler(filters.Regex(BACK), go_home)],
     map_to_parent={

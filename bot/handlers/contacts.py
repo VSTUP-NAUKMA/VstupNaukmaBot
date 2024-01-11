@@ -1,8 +1,8 @@
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters
 
-BACK = 'Назад'
-HOME = 'На головну'
+from bot.utils.utils import BACK, go_home
+
 CONTACTS = 1
 
 
@@ -14,11 +14,6 @@ async def contacts(update: Update, context: CallbackContext) -> int:
     await update.message.reply_text('Контакти', reply_markup=reply_markup)
     return CONTACTS
 
-
-async def go_home(update: Update, context: CallbackContext) -> int:
-    from bot.handlers.start import start
-    await start(update, context)
-    return ConversationHandler.END
 
 
 # Структура ConversationHandler

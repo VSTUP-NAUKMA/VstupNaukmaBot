@@ -64,9 +64,16 @@ async def answer(update: Update, context: CallbackContext) -> int:
         context.user_data['question'] = update.message.text
     # print(f"answer function : question {context.user_data.get('question')}")
     # print(warehouse[context.user_data.get('degree')][context.user_data.get('faculty')].keys())
+    answer_reply = \
+        warehouse[
+            context.user_data.get('degree')][
+            context.user_data.get('faculty')][
+            context.user_data.get('speciality')][
+            context.user_data.get('question')
+        ]
     reply_markup = get_column_keyboard([], back_button=True)
     await update.message.reply_text(
-        f"{warehouse[context.user_data.get('degree')][context.user_data.get('faculty')][context.user_data.get('speciality')][context.user_data.get('question')]}",
+        f"{answer_reply}",
         reply_markup=reply_markup)
     return ANSWER
 
