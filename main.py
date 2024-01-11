@@ -7,7 +7,7 @@ from telegram import Update
 from telegram.ext import Application, CallbackQueryHandler, PicklePersistence
 
 from bot.handlers.dormitory import dormitory_handler
-from bot.handlers.operator_chat import reply_handler, button_callback, clear_pending_replies, conv_handler
+from bot.handlers.operator_chat import reply_handler, button_callback, clear_pending_replies, operator_chat_handler
 from bot.handlers.start import start_handler
 from bot.handlers.admission import admission_handler
 from bot.utils.config import load_env
@@ -24,7 +24,7 @@ if __name__ == '__main__':
         persistence=persistence).build()
     button_handler = CallbackQueryHandler(button_callback)
     application.add_handler(start_handler)
-    application.add_handler(conv_handler)
+    application.add_handler(operator_chat_handler)
     application.add_handler(dormitory_handler)
     application.add_handler(admission_handler)
 
