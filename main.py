@@ -12,6 +12,7 @@ from bot.handlers.operator_chat import reply_handler, button_callback, clear_pen
 from bot.handlers.start import start_handler
 from bot.handlers.admission import admission_handler
 from bot.handlers.student_life import student_life_handler
+from bot.handlers.study_process import study_process_handler
 from bot.utils.config import load_env
 from bot.utils.utils import delete_persistence_file
 
@@ -30,6 +31,7 @@ if __name__ == '__main__':
     application.add_handler(admission_handler)
     application.add_handler(student_life_handler)
     application.add_handler(contacts_handler)
+    application.add_handler(study_process_handler)
 
     # Інші хендлери, такі як button_handler, reply_handler і т.д.
     application.add_handler(button_handler)

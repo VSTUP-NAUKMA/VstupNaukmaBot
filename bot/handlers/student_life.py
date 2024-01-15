@@ -1,39 +1,32 @@
-from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
+from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters
 
-from bot.utils.utils import get_keyboard, go_home, BACK, HOME
+from bot.utils.repository import generic_reply, go_home  # Імпорт з загального файлу
 
-STUDENT_LIFE, OSS, SO = range(3)
+BACK = 'Назад'
+HOME = 'На головну'
+STUDENTLIFE, OSS, SO = range(3)
 
 
 async def student_life(update: Update, context: CallbackContext) -> int:
-    keyboard = [
-        [KeyboardButton(text='Органи студентського самоврядування'),
-         KeyboardButton(text='Студентські організації')],
-        [KeyboardButton(text='Назад')]
-    ]
-    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
-    await update.message.reply_text('Оберіть категорію:', reply_markup=reply_markup)
-    return STUDENT_LIFE
+    buttons = [['Органи студентського самоврядування', 'Студентські організації']]
+    return await generic_reply(update, 'Оберіть категорію:', buttons, STUDENTLIFE, back_button=True)
 
 
 async def oss(update: Update, context: CallbackContext) -> int:
-    reply_markup = get_keyboard([], back_button=True)
-    await update.message.reply_text('ск топ', reply_markup=reply_markup)
-    return OSS
+    return await generic_reply(update, 'ск топ', [], OSS, back_button=True, home_button=True,
+                               back_home_row=True)
 
 
 async def so(update: Update, context: CallbackContext) -> int:
-    reply_markup = get_keyboard([], back_button=True)
-    await update.message.reply_text('Сошка вступ навукма топ', reply_markup=reply_markup)
-    return SO
+    return await generic_reply(update, 'Сошка вступ навукма топ', [], SO, back_button=True, home_button=True,
+                               back_home_row=True)
 
 
-# Структура ConversationHandler
 student_life_handler = ConversationHandler(
     entry_points=[MessageHandler(filters.Regex('Студентське життя'), student_life)],
     states={
-        STUDENT_LIFE: [
+        STUDENTLIFE: [
             MessageHandler(filters.Regex('Органи студентського самоврядування'), oss),
             MessageHandler(filters.Regex('Студентські організації'), so),
             MessageHandler(filters.Regex(BACK), go_home),
@@ -42,11 +35,10 @@ student_life_handler = ConversationHandler(
             MessageHandler(filters.Regex(BACK), student_life),
             MessageHandler(filters.Regex(HOME), go_home),
         ],
-
-        SO: [MessageHandler(filters.Regex(BACK), student_life),
-             MessageHandler(filters.Regex(HOME), go_home),
-             ],
-
+        SO: [
+            MessageHandler(filters.Regex(BACK), student_life),
+            MessageHandler(filters.Regex(HOME), go_home),
+        ],
     },
     fallbacks=[],
     name='student_life-handler',

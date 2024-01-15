@@ -88,6 +88,15 @@ async def send_to_operator(update: Update, _: CallbackContext) -> int:
     return IN_CONVERSATION
 
 
+async def go_home(update: Update, context: CallbackContext) -> int:
+    user_chat_id = update.effective_chat.id
+    global pending_replies
+    pending_replies = {k: v for k, v in pending_replies.items() if v != user_chat_id}
+    from bot.handlers.start import start
+    await start(update, context)
+    return ConversationHandler.END
+
+
 async def button_callback(update: Update, _: CallbackContext) -> None:
     query = update.callback_query
     if query.data == 'already_pressed':
