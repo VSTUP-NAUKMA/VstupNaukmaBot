@@ -9,7 +9,7 @@ CONTACTS = 1
 
 
 async def contacts(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, 'Контакти текст', [], CONTACTS, back_button=True, home_button=True,
+    return await generic_reply(update, 'Контакти текст', [], CONTACTS, back_button=True,
                                back_home_row=True)
 
 
