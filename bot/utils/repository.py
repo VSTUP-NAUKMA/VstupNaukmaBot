@@ -33,6 +33,7 @@ async def generic_reply(update, text, buttons, state, back_button=False, home_bu
     await update.message.reply_text(text, reply_markup=reply_markup)
     return state
 
+
 async def go_home(update: Update, context: CallbackContext) -> int:
     from bot.handlers.start import start
     await start(update, context)

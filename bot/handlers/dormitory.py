@@ -1,17 +1,12 @@
-from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
+from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, MessageHandler, filters
 
 from bot.utils.fields import *
-from bot.utils.repository import generic_reply
+from bot.utils.repository import generic_reply, go_home
 
 BACK = 'Назад'
 HOME = 'На головну'
 DORMITORY, MASTERS, BACHELORS, ORDERS, PRICE, GURTO, DOCUMENT_REVIEW, VORZEL, ADVICE, ORDERS_NEXT = range(10)
-
-
-def create_keyboard_button(text):
-    return KeyboardButton(text)
-
 
 
 async def dormitory(update: Update, context: CallbackContext) -> int:
@@ -26,7 +21,8 @@ async def masters(update: Update, context: CallbackContext) -> int:
 
 async def bachelors(update: Update, context: CallbackContext) -> int:
     buttons = [['На Троєщині', 'На Харківському шосе', 'На вул. Джона Маккейна']]
-    return await generic_reply(update, 'Бакалаврат: Оберіть гуртожиток', buttons, BACHELORS, back_button=True, home_button=True)
+    return await generic_reply(update, 'Бакалаврат: Оберіть гуртожиток', buttons, BACHELORS, back_button=True,
+                               home_button=True)
 
 
 async def orders(update: Update, context: CallbackContext) -> int:
@@ -35,7 +31,8 @@ async def orders(update: Update, context: CallbackContext) -> int:
 
 
 async def advices(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, 'троя говно маккейна говно харьок топ', [], ADVICE, back_button=True, home_button=True,
+    return await generic_reply(update, 'троя говно маккейна говно харьок топ', [], ADVICE, back_button=True,
+                               home_button=True,
                                back_home_row=True)
 
 
@@ -62,12 +59,6 @@ async def price(update: Update, context: CallbackContext) -> int:
 async def document_review(update: Update, context: CallbackContext) -> int:
     return await generic_reply(update, DOCUMENTS_TEXT, [], ORDERS_NEXT, back_button=True, home_button=True,
                                back_home_row=True)
-
-
-async def go_home(update: Update, context: CallbackContext) -> int:
-    from bot.handlers.start import start
-    await start(update, context)
-    return ConversationHandler.END
 
 
 dormitory_handler = ConversationHandler(
