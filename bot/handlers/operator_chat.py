@@ -5,7 +5,6 @@ from telegram import Update, Message, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackContext, MessageHandler, filters, ConversationHandler
 
 from bot.utils.config import logger
-from bot.utils.utils import go_home
 
 IN_CONVERSATION = 1
 pending_replies = {}

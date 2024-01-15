@@ -3,7 +3,7 @@ from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, f
 
 from bot.handlers.contacts import go_home
 from bot.utils.fields import *
-from bot.utils.repository import generic_reply
+from bot.utils.utils import generic_reply
 
 BACK = 'Назад'
 HOME = 'На головну'
