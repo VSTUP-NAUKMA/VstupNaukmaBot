@@ -20,7 +20,6 @@ async def faculty(update: Update, context: CallbackContext) -> int:
 
 
 async def speciality(update: Update, context: CallbackContext) -> int:
-    print("speciality")
     if update.message.text != BACK:
         context.user_data['faculty'] = update.message.text
     buttons = list(
@@ -29,7 +28,6 @@ async def speciality(update: Update, context: CallbackContext) -> int:
 
 
 async def question(update: Update, context: CallbackContext) -> int:
-    print("question")
     if update.message.text != BACK:
         context.user_data['speciality'] = update.message.text
     buttons = list(map(lambda x: [x], warehouse[context.user_data.get('degree')][context.user_data.get('faculty')][
@@ -38,7 +36,6 @@ async def question(update: Update, context: CallbackContext) -> int:
 
 
 async def answer(update: Update, context: CallbackContext) -> int:
-    print("answer")
     if update.message.text != BACK:
         context.user_data['question'] = update.message.text
     answer_reply = \
