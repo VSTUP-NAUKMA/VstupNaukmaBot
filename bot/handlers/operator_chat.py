@@ -17,12 +17,6 @@ async def clear_pending_replies(interval: int):
         logger.info('Cleared pending_replies')
 
 
-async def go_home(update: Update, context: CallbackContext) -> int:
-    from bot.handlers.start import start
-    await start(update, context)
-    return ConversationHandler.END
-
-
 async def connect_with_operator(update: Update, _: CallbackContext) -> int:
     keyboard = [
         [
@@ -91,6 +85,15 @@ async def send_to_operator(update: Update, _: CallbackContext) -> int:
     pending_replies[sent_message.message_id] = update.effective_chat.id
 
     return IN_CONVERSATION
+
+
+async def go_home(update: Update, context: CallbackContext) -> int:
+    user_chat_id = update.effective_chat.id
+    global pending_replies
+    pending_replies = {k: v for k, v in pending_replies.items() if v != user_chat_id}
+    from bot.handlers.start import start
+    await start(update, context)
+    return ConversationHandler.END
 
 
 async def button_callback(update: Update, _: CallbackContext) -> None:
