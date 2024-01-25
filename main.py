@@ -37,8 +37,6 @@ if __name__ == '__main__':
     application.add_handler(button_handler)
     application.add_handler(reply_handler)
 
-    atexit.register(
-        delete_persistence_file)  # Register the function to be called on exit (видаляти пікл, щоб просто без зайобу)
 
     loop = asyncio.get_event_loop()
     loop.create_task(clear_pending_replies(86400))  # 24 hours
