@@ -1,4 +1,4 @@
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardRemove
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import MessageHandler, filters, CommandHandler, CallbackQueryHandler
 
 from bot.utils.utils import *
@@ -6,6 +6,16 @@ from bot.utils.utils import *
 ADMISSION, FACULTY, SPECIALITY, QUESTION, ANSWER, CALCULATE = range(6)
 
 warehouse = json_to_dict("bot/utils/specialties.json")
+additional_subjects = [
+    "Іноземна мова",
+    "Біологія",
+    "Фізика",
+    "Хімія",
+    "Українська література",
+    "Географія"
+]
+all_subjects = ["Історія України", "Математика", "Українська мова"] + additional_subjects + ["bonus"]
+pattern = '^(' + '|'.join(all_subjects) + ')$'
 
 
 async def admission(update: Update, context: CallbackContext) -> int:
@@ -21,7 +31,17 @@ async def faculty(update: Update, context: CallbackContext) -> int:
 
 
 async def clear_scores(context: CallbackContext):
-    keys_to_clear = ['score_Українска мова', 'score_Математика', 'score_Історія України', 'score_bonus']
+    keys_to_clear = [
+        'score_Українська мова',
+        'score_Математика',
+        'score_Історія України',
+        'score_Іноземна мова',
+        'score_Біологія',
+        'score_Фізика',
+        'score_Хімія',
+        'score_Українська література',
+        'score_Географія'
+    ]
     for key in keys_to_clear:
         context.user_data.pop(key, None)
 
@@ -55,37 +75,70 @@ async def answer(update: Update, context: CallbackContext) -> int:
 
 
 async def calculate(update: Update, context: CallbackContext) -> int:
+    context.user_data['selected_additional_subject'] = ''
     if update.message.text != BACK:
         context.user_data['question'] = update.message.text
     answer_reply = \
         warehouse[context.user_data.get('degree')][context.user_data.get('faculty')][
             context.user_data.get('speciality')][
             context.user_data.get('question')]
-    keyboard = [
 
+    keyboard = [
         [InlineKeyboardButton("Українська мова", callback_data="Українська мова")],
         [InlineKeyboardButton("Математика", callback_data="Математика")],
         [InlineKeyboardButton("Історія України", callback_data="Історія України")],
         [InlineKeyboardButton("Додатково", callback_data="bonus")],
-
     ]
 
     context.user_data['coefficients'] = answer_reply
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("Оберіть бали", reply_markup=reply_markup)
+
+    await generic_reply(update, "Оберіть бали: ", [], CALCULATE, back_button=True, home_button=True,
+                        back_home_row=True)
+    await update.message.reply_text("Предмети: ", reply_markup=reply_markup)
     return CALCULATE
 
 
 async def enter_score(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     await query.answer()
-    selected_subject = query.data  # 'ukr', 'math', 'hist', 'extra'
+    selected_subject = query.data
 
-    # Збережіть вибраний предмет у контексті для подальшого використання
-    context.user_data['selected_subject'] = selected_subject
+    if selected_subject == 'bonus':
+        additional_subjects_buttons = [[InlineKeyboardButton(subj, callback_data=subj)] for subj in additional_subjects]
+        reply_markup = InlineKeyboardMarkup(additional_subjects_buttons)
+        await query.edit_message_text(text="Оберіть додатковий предмет:", reply_markup=reply_markup)
+    else:
+        is_additional_subject = selected_subject in additional_subjects
 
-    await query.edit_message_text(text=f"Введіть ваш бал з {selected_subject}:")
+        if is_additional_subject:
+            for subj in additional_subjects:
+                context.user_data.pop(f'score_{subj}', None)
+
+        context.user_data['selected_subject'] = selected_subject
+        if selected_subject in additional_subjects:
+            context.user_data['selected_additional_subject'] = selected_subject
+        await query.edit_message_text(text=f"Введіть ваш бал:")
     return CALCULATE
+
+
+async def calculate_final_score(update: Update, context: CallbackContext) -> int:
+    coefficients_list = context.user_data['coefficients'].split()
+
+    total_weighted_score = 0
+    total_coefficients = 0
+
+    for subject, index in {"Українська мова": 0, "Математика": 1, "Історія України": 2, "Іноземна мова": 3, "Біологія": 4,
+                           "Фізика": 5, "Хімія": 6, "Українська література": 7, "Географія": 8}.items():
+        score_entry = context.user_data.get(f'score_{subject}', None)
+        if score_entry:
+            score = float(score_entry.split('=')[-1].strip())
+            coefficient = float(coefficients_list[index])
+            total_weighted_score += score
+            total_coefficients += coefficient
+
+    final_score = round(total_weighted_score / total_coefficients, 2) if total_coefficients > 0 else 0
+    await update.callback_query.edit_message_text(text=f"Ваш конкурсний бал: {final_score}")
 
 
 async def score_received(update: Update, context: CallbackContext) -> int:
@@ -94,15 +147,15 @@ async def score_received(update: Update, context: CallbackContext) -> int:
 
     coefficients_list = context.user_data['coefficients'].split()
 
-    # Розрахунок остаточного балу
-    subject_index = {"Українська мова": 0, "Математика": 1, "Історія України": 2, "extra": 3}
+    subject_index = {"Українська мова": 0, "Математика": 1, "Історія України": 2, "Іноземна мова": 3, "Біологія": 4,
+                     "Фізика": 5, "Хімія": 6, "Українська література": 7, "Географія": 8}
     coefficient = float(coefficients_list[subject_index[selected_subject]])
 
-    final_score = user_score * coefficient
-    context.user_data[f'score_{selected_subject}'] = str(user_score) + "*" + str(coefficient) + " = " + str(final_score)
+    final_score = round(user_score * coefficient, 2)
 
+    context.user_data[f'score_{selected_subject}'] = str(user_score) + "*" + str(coefficient) + " = " + str(
+        final_score)
 
-    # Оновлення інлайн-клавіатури
     keyboard = [
         [InlineKeyboardButton(f"Українська мова: {context.user_data.get('score_Українська мова', '')}",
                               callback_data="Українська мова")],
@@ -110,8 +163,22 @@ async def score_received(update: Update, context: CallbackContext) -> int:
                               callback_data="Математика")],
         [InlineKeyboardButton(f"Історія України: {context.user_data.get('score_Історія України', '')}",
                               callback_data="Історія України")],
-        [InlineKeyboardButton(f"Додатково: {context.user_data.get('score_bonus', 'Додатково')}", callback_data="bonus")]
+        [InlineKeyboardButton(
+            f"Додатковий: {context.user_data.get('score_' + context.user_data['selected_additional_subject'], '')}",
+            callback_data="bonus")]
     ]
+
+    mandatory_subjects = ['score_Українська мова', 'score_Математика', 'score_Історія України']
+    mandatory_scores_entered = all(context.user_data.get(subject, None) is not None for subject in mandatory_subjects)
+
+    additional_score_entered = any(
+        context.user_data.get(f'score_{subject}', None) is not None for subject in additional_subjects)
+
+    all_scores_entered = mandatory_scores_entered and additional_score_entered
+
+    if all_scores_entered:
+        keyboard.append([InlineKeyboardButton("Розрахувати конкурсний бал", callback_data="calculate_final_score")])
+
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     await update.message.reply_text(
@@ -135,7 +202,8 @@ admission_handler = ConversationHandler(
                    MessageHandler(filters.Regex(BACK), speciality),
                    MessageHandler(filters.Regex(HOME), go_home), MessageHandler(filters.Regex('.*'), answer)],
         CALCULATE: [
-            CallbackQueryHandler(enter_score, pattern='^(Історія України|Математика|Українська мова|bonus)$'),
+            CallbackQueryHandler(enter_score, pattern=pattern),
+            CallbackQueryHandler(calculate_final_score, pattern='^calculate_final_score$'),
             MessageHandler(filters.Regex(BACK), question),
             MessageHandler(filters.Regex(HOME), go_home),
             MessageHandler(filters.TEXT & ~filters.COMMAND, score_received)
