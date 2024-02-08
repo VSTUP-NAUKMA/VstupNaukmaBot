@@ -34,7 +34,7 @@ async def faculty(update: Update, context: CallbackContext) -> int:
     if update.message.text != BACK:
         context.user_data['degree'] = update.message.text
     buttons = list(map(lambda x: [x], warehouse[context.user_data.get('degree')].keys()))
-    return await generic_reply(update, 'Оберіть факультет:', buttons, FACULTY, back_button=True)
+    return await generic_reply(update, 'Оберіть факультет:', buttons, FACULTY, back_button=True, home_button=True)
 
 
 async def clear_scores(context: CallbackContext):
@@ -48,7 +48,8 @@ async def speciality(update: Update, context: CallbackContext) -> int:
         context.user_data['faculty'] = update.message.text
     buttons = list(
         map(lambda x: [x], warehouse[context.user_data.get('degree')][context.user_data.get('faculty')].keys()))
-    return await generic_reply(update, 'Оберіть спеціальність:', buttons, SPECIALITY, back_button=True)
+    return await generic_reply(update, 'Оберіть спеціальність:', buttons, SPECIALITY, back_button=True,
+                               home_button=True)
 
 
 async def question(update: Update, context: CallbackContext) -> int:
@@ -58,7 +59,7 @@ async def question(update: Update, context: CallbackContext) -> int:
         context.user_data['speciality'] = update.message.text
     buttons = list(map(lambda x: [x], warehouse[context.user_data.get('degree')][context.user_data.get('faculty')][
         context.user_data.get('speciality')].keys()))
-    return await generic_reply(update, 'Оберіть питання:', buttons, QUESTION, back_button=True)
+    return await generic_reply(update, 'Оберіть питання:', buttons, QUESTION, back_button=True, home_button=True)
 
 
 async def answer(update: Update, context: CallbackContext) -> int:
@@ -68,7 +69,7 @@ async def answer(update: Update, context: CallbackContext) -> int:
         warehouse[context.user_data.get('degree')][context.user_data.get('faculty')][
             context.user_data.get('speciality')][
             context.user_data.get('question')]
-    return await generic_reply(update, f"{answer_reply}", [], ANSWER, back_button=True)
+    return await generic_reply(update, f"{answer_reply}", [], ANSWER, back_button=True, home_button=True)
 
 
 async def calculate(update: Update, context: CallbackContext) -> int:
@@ -224,4 +225,5 @@ admission_handler = ConversationHandler(
     fallbacks=[CommandHandler('start', admission)],
     name="admission-handler",
     persistent=True,
+    per_chat=True
 )

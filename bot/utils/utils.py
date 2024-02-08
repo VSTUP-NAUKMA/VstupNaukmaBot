@@ -4,9 +4,9 @@ import os
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update
 from telegram.ext import CallbackContext, ConversationHandler
 
-
 BACK = 'Назад'
 HOME = 'На головну'
+
 
 def create_keyboard_button(text):
     return KeyboardButton(text)
@@ -52,3 +52,15 @@ def json_to_dict(file_name: str) -> dict:
     with open(file_name, "r", encoding="UTF-8") as file:
         return json.load(file)
 
+
+def save_chat_id(chat_id):
+    with open("registered_chat_ids.txt", "a") as file:
+        file.write(str(chat_id) + "\n")
+
+
+def is_chat_id_registered(chat_id):
+    with open("registered_chat_ids.txt", "r") as file:
+        for line in file:
+            if str(chat_id) == line.strip():
+                return True
+    return False
