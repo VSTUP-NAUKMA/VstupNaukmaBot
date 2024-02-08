@@ -4,9 +4,9 @@ import os
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update
 from telegram.ext import CallbackContext, ConversationHandler
 
+
 BACK = 'Назад'
 HOME = 'На головну'
-
 
 def create_keyboard_button(text):
     return KeyboardButton(text)
@@ -51,3 +51,4 @@ def delete_persistence_file():
 def json_to_dict(file_name: str) -> dict:
     with open(file_name, "r", encoding="UTF-8") as file:
         return json.load(file)
+

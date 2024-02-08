@@ -18,6 +18,13 @@ all_subjects = ["Історія України", "Математика", "Укр
 pattern = '^(' + '|'.join(all_subjects) + ')$'
 
 
+async def go_home(update: Update, context: CallbackContext) -> int:
+    from bot.handlers.start import start
+    await clear_scores(context)
+    await start(update, context)
+    return ConversationHandler.END
+
+
 async def admission(update: Update, context: CallbackContext) -> int:
     buttons = [['Бакалаврат', 'Магістратура']]
     return await generic_reply(update, 'Оберіть категорію:', buttons, ADMISSION, back_button=True)
@@ -31,17 +38,7 @@ async def faculty(update: Update, context: CallbackContext) -> int:
 
 
 async def clear_scores(context: CallbackContext):
-    keys_to_clear = [
-        'score_Українська мова',
-        'score_Математика',
-        'score_Історія України',
-        'score_Іноземна мова',
-        'score_Біологія',
-        'score_Фізика',
-        'score_Хімія',
-        'score_Українська література',
-        'score_Географія'
-    ]
+    keys_to_clear = [f'score_{subj}' for subj in all_subjects]
     for key in keys_to_clear:
         context.user_data.pop(key, None)
 
@@ -122,13 +119,14 @@ async def enter_score(update: Update, context: CallbackContext) -> int:
     return CALCULATE
 
 
-async def calculate_final_score(update: Update, context: CallbackContext) -> int:
+async def calculate_final_score(update: Update, context: CallbackContext):
     coefficients_list = context.user_data['coefficients'].split()
 
     total_weighted_score = 0
     total_coefficients = 0
 
-    for subject, index in {"Українська мова": 0, "Математика": 1, "Історія України": 2, "Іноземна мова": 3, "Біологія": 4,
+    for subject, index in {"Українська мова": 0, "Математика": 1, "Історія України": 2, "Іноземна мова": 3,
+                           "Біологія": 4,
                            "Фізика": 5, "Хімія": 6, "Українська література": 7, "Географія": 8}.items():
         score_entry = context.user_data.get(f'score_{subject}', None)
         if score_entry:
@@ -142,51 +140,63 @@ async def calculate_final_score(update: Update, context: CallbackContext) -> int
 
 
 async def score_received(update: Update, context: CallbackContext) -> int:
-    user_score = float(update.message.text)
-    selected_subject = context.user_data['selected_subject']
+    user_input = update.message.text.strip()
+    try:
+        user_score = float(user_input)
+        if 100 <= user_score <= 200:
+            selected_subject = context.user_data['selected_subject']
 
-    coefficients_list = context.user_data['coefficients'].split()
+            coefficients_list = context.user_data['coefficients'].split()
 
-    subject_index = {"Українська мова": 0, "Математика": 1, "Історія України": 2, "Іноземна мова": 3, "Біологія": 4,
-                     "Фізика": 5, "Хімія": 6, "Українська література": 7, "Географія": 8}
-    coefficient = float(coefficients_list[subject_index[selected_subject]])
+            subject_index = {"Українська мова": 0, "Математика": 1, "Історія України": 2, "Іноземна мова": 3,
+                             "Біологія": 4,
+                             "Фізика": 5, "Хімія": 6, "Українська література": 7, "Географія": 8}
+            coefficient = float(coefficients_list[subject_index[selected_subject]])
 
-    final_score = round(user_score * coefficient, 2)
+            final_score = round(user_score * coefficient, 2)
 
-    context.user_data[f'score_{selected_subject}'] = str(user_score) + "*" + str(coefficient) + " = " + str(
-        final_score)
+            context.user_data[f'score_{selected_subject}'] = str(user_score) + "*" + str(coefficient) + " = " + str(
+                final_score)
 
-    keyboard = [
-        [InlineKeyboardButton(f"Українська мова: {context.user_data.get('score_Українська мова', '')}",
-                              callback_data="Українська мова")],
-        [InlineKeyboardButton(f"Математика: {context.user_data.get('score_Математика', '')}",
-                              callback_data="Математика")],
-        [InlineKeyboardButton(f"Історія України: {context.user_data.get('score_Історія України', '')}",
-                              callback_data="Історія України")],
-        [InlineKeyboardButton(
-            f"Додатковий: {context.user_data.get('score_' + context.user_data['selected_additional_subject'], '')}",
-            callback_data="bonus")]
-    ]
+            keyboard = [
+                [InlineKeyboardButton(f"Українська мова: {context.user_data.get('score_Українська мова', '')}",
+                                      callback_data="Українська мова")],
+                [InlineKeyboardButton(f"Математика: {context.user_data.get('score_Математика', '')}",
+                                      callback_data="Математика")],
+                [InlineKeyboardButton(f"Історія України: {context.user_data.get('score_Історія України', '')}",
+                                      callback_data="Історія України")],
+                [InlineKeyboardButton(
+                    f"Додатковий: {context.user_data.get('score_' + context.user_data['selected_additional_subject'], '')}",
+                    callback_data="bonus")]
+            ]
 
-    mandatory_subjects = ['score_Українська мова', 'score_Математика', 'score_Історія України']
-    mandatory_scores_entered = all(context.user_data.get(subject, None) is not None for subject in mandatory_subjects)
+            mandatory_subjects = ['score_Українська мова', 'score_Математика', 'score_Історія України']
+            mandatory_scores_entered = all(
+                context.user_data.get(subject, None) is not None for subject in mandatory_subjects)
 
-    additional_score_entered = any(
-        context.user_data.get(f'score_{subject}', None) is not None for subject in additional_subjects)
+            additional_score_entered = any(
+                context.user_data.get(f'score_{subject}', None) is not None for subject in additional_subjects)
 
-    all_scores_entered = mandatory_scores_entered and additional_score_entered
+            all_scores_entered = mandatory_scores_entered and additional_score_entered
 
-    if all_scores_entered:
-        keyboard.append([InlineKeyboardButton("Розрахувати конкурсний бал", callback_data="calculate_final_score")])
+            if all_scores_entered:
+                keyboard.append(
+                    [InlineKeyboardButton("Розрахувати конкурсний бал", callback_data="calculate_final_score")])
 
-    reply_markup = InlineKeyboardMarkup(keyboard)
+            reply_markup = InlineKeyboardMarkup(keyboard)
 
-    await update.message.reply_text(
-        text="Виберіть наступний предмет або завершіть введення балів.",
-        reply_markup=reply_markup
-    )
+            await update.message.reply_text(
+                text="Виберіть наступний предмет або завершіть введення балів.",
+                reply_markup=reply_markup
+            )
 
-    return CALCULATE
+            return CALCULATE
+        else:
+            await update.message.reply_text("Бал повинен бути в межах від 100 до 200. Спробуйте ще раз.")
+            return CALCULATE
+    except ValueError:
+        await update.message.reply_text("Введено некоректний бал. Бал повинен бути числом. Спробуйте ще раз.")
+        return CALCULATE
 
 
 admission_handler = ConversationHandler(
