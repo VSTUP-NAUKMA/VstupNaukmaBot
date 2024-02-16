@@ -35,20 +35,17 @@ async def features(update: Update, context: CallbackContext) -> int:
 
 async def difference(update: Update, context: CallbackContext) -> int:
     buttons = [['Різниця в термінах', 'Система оцінювання']]
-    return await generic_reply(update, 'Оберіть категорію:', buttons, DIFFERENCE, back_button=True, home_button=True,
-                               back_home_row=True)
+    return await generic_reply(update, 'Оберіть категорію:', buttons, DIFFERENCE, back_button=True, home_button=True)
 
 
 async def programs(update: Update, context: CallbackContext) -> int:
     buttons = [['Бакалаврат', 'Магістратура']]
-    return await generic_reply(update, 'Оберіть категорію:', buttons, PROGRAMS, back_button=True, home_button=True,
-                               back_home_row=True)
+    return await generic_reply(update, 'Оберіть категорію:', buttons, PROGRAMS, back_button=True, home_button=True)
 
 
 async def campus(update: Update, context: CallbackContext) -> int:
     buttons = [['Корпуси', 'Де поїсти/відпочити біля КМА']]
-    return await generic_reply(update, 'Оберіть категорію:', buttons, CAMPUS, back_button=True, home_button=True,
-                               back_home_row=True)
+    return await generic_reply(update, 'Оберіть категорію:', buttons, CAMPUS, back_button=True, home_button=True)
 
 
 async def term_difference(update: Update, context: CallbackContext) -> int:

@@ -107,16 +107,10 @@ async def enter_score(update: Update, context: CallbackContext) -> int:
         reply_markup = InlineKeyboardMarkup(additional_subjects_buttons)
         await query.edit_message_text(text="Оберіть додатковий предмет:", reply_markup=reply_markup)
     else:
-        is_additional_subject = selected_subject in additional_subjects
-
-        if is_additional_subject:
-            for subj in additional_subjects:
-                context.user_data.pop(f'score_{subj}', None)
-
         context.user_data['selected_subject'] = selected_subject
         if selected_subject in additional_subjects:
             context.user_data['selected_additional_subject'] = selected_subject
-        await query.edit_message_text(text=f"Введіть ваш бал:")
+        await query.edit_message_text(text=f"Введіть ваш бал за предмет {selected_subject}:")
     return CALCULATE
 
 
@@ -158,7 +152,8 @@ async def score_received(update: Update, context: CallbackContext) -> int:
 
             context.user_data[f'score_{selected_subject}'] = str(user_score) + "*" + str(coefficient) + " = " + str(
                 final_score)
-
+            selected_additional_subject = context.user_data.get('selected_additional_subject', '')
+            additional_subject_label = selected_additional_subject if selected_additional_subject else "Додатковий"
             keyboard = [
                 [InlineKeyboardButton(f"Українська мова: {context.user_data.get('score_Українська мова', '')}",
                                       callback_data="Українська мова")],
@@ -167,7 +162,7 @@ async def score_received(update: Update, context: CallbackContext) -> int:
                 [InlineKeyboardButton(f"Історія України: {context.user_data.get('score_Історія України', '')}",
                                       callback_data="Історія України")],
                 [InlineKeyboardButton(
-                    f"Додатковий: {context.user_data.get('score_' + context.user_data['selected_additional_subject'], '')}",
+                    f"{additional_subject_label}: {context.user_data.get(f'score_{selected_additional_subject}', '')}",
                     callback_data="bonus")]
             ]
 
