@@ -13,9 +13,9 @@ PROCESS, OPPORTUNITIES, FEATURES, DIFFERENCE, FEATURES_LAST_CHOICE, OPPORTUNITIE
 
 async def process(update: Update, context: CallbackContext) -> int:
     buttons = [
-        ['Особливості навчання в НаУКМА', 'Можливості'],
-        ['Різниця між університетом та школою', 'Сертифікатні програми'],
-        ['Кампус'],
+        ['Особливості навчання в НаУКМА', 'Сертифікатні програми'],
+        ['Кампус', 'Можливості'],
+        ['Різниця між університетом та школою'],
     ]
     return await generic_reply(update, 'Оберіть категорію:', buttons, PROCESS, back_button=True)
 
@@ -27,8 +27,8 @@ async def opportunities(update: Update, context: CallbackContext) -> int:
 
 
 async def features(update: Update, context: CallbackContext) -> int:
-    buttons = [['Триместри', 'Індивідуальний навчальний план'],
-               ['Організація навчання', 'Оцінювання викладачів'], ['Вибіркові дисципліни', 'Формат навчання'],
+    buttons = [['Триместри', 'Організація навчання'],
+               ['Індивідуальний навчальний план', 'Оцінювання викладачів'], ['Вибіркові дисципліни', 'Формат навчання'],
                ['Розклад']]
     return await generic_reply(update, 'Оберіть категорію:', buttons, FEATURES, back_button=True, home_button=True)
 

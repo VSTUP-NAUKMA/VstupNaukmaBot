@@ -20,7 +20,7 @@ async def masters(update: Update, context: CallbackContext) -> int:
 
 
 async def bachelors(update: Update, context: CallbackContext) -> int:
-    buttons = [['На Троєщині', 'На Харківському шосе', 'На вул. Джона Маккейна']]
+    buttons = [['Троєщина', 'Харківське шосе', 'Джона Маккейна']]
     return await generic_reply(update, 'Бакалаврат: Оберіть гуртожиток', buttons, BACHELORS, back_button=True,
                                home_button=True)
 
