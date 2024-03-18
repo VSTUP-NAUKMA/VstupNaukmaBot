@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update
@@ -68,3 +69,10 @@ def is_chat_id_registered(chat_id):
             if str(chat_id) == line.strip():
                 return True
     return False
+
+
+async def shutdown_signal_handler(application, persistence):
+    logging.info("Received stop signal, shutting down gracefully...")
+    persistence.flush()
+    await application.stop()
+    logging.info("Bot persistence flushed to disk and application stopped.")
