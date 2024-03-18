@@ -20,7 +20,6 @@ from bot.utils.utils import shutdown_signal_handler
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 if __name__ == '__main__':
-
     load_env()
     persistence = PicklePersistence(filepath="bot.pickle")
     application = Application.builder().token(os.getenv('TELEGRAM_BOT_TOKEN')).persistence(
@@ -42,13 +41,7 @@ if __name__ == '__main__':
     loop.create_task(clear_pending_replies(86400))  # 24 hours
 
     loop = asyncio.get_event_loop()
-    for sig in ('SIGINT', 'SIGTERM'):
-        loop.add_signal_handler(
-            getattr(signal, sig),
-            lambda s=sig: asyncio.create_task(shutdown_signal_handler(application, persistence))
-        )
+    signal.signal(signal.SIGINT, lambda s, f: shutdown_signal_handler(application, persistence))
+    signal.signal(signal.SIGTERM, lambda s, f: shutdown_signal_handler(application, persistence))
 
     application.run_polling(allowed_updates=Update.ALL_TYPES)
-
-
-
