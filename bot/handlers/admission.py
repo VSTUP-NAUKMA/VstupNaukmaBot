@@ -1,4 +1,5 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, filters, CommandHandler, CallbackQueryHandler
 
 from bot.utils.utils import *
@@ -62,14 +63,30 @@ async def question(update: Update, context: CallbackContext) -> int:
     return await generic_reply(update, 'Оберіть питання:', buttons, QUESTION, back_button=True, home_button=True)
 
 
-async def answer(update: Update, context: CallbackContext) -> int:
+async def answer(update: Update, context: CallbackContext):
     if update.message.text != BACK:
         context.user_data['question'] = update.message.text
+    if context.user_data.get('question') == 'Дисципліни':
+        return await show_specialty_website(update, context, 'Дисципліни цієї освітньої програми можна переглянути за')
+    elif context.user_data.get('question') == 'Сайт конкурс':
+        return await show_specialty_website(update, context, 'Переглянути перелік минулорічних заявок, поданих на цю '
+                                                             'спеціальність, можеш за')
     answer_reply = \
         warehouse[context.user_data.get('degree')][context.user_data.get('faculty')][
             context.user_data.get('speciality')][
             context.user_data.get('question')]
     return await generic_reply(update, f"{answer_reply}", [], ANSWER, back_button=True, home_button=True)
+
+
+async def show_specialty_website(update: Update, context: CallbackContext, text):
+    answer_reply = \
+        warehouse[context.user_data.get('degree')][context.user_data.get('faculty')][
+            context.user_data.get('speciality')][
+            context.user_data.get('question')]
+
+    formatted_message = f"{text} [посиланням]({answer_reply})."
+    await generic_reply(update, formatted_message, [], ANSWER, back_button=True, home_button=True,
+                        parse_mode=ParseMode.MARKDOWN)
 
 
 async def calculate(update: Update, context: CallbackContext) -> int:

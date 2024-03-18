@@ -145,7 +145,7 @@ study_process_handler = ConversationHandler(
             MessageHandler(filters.Regex('Працевлаштування'), work),
             MessageHandler(filters.Regex('Навчальна практика'), practice),
             MessageHandler(filters.Regex(BACK), process),
-            MessageHandler(filters.Regex(BACK), go_home),
+            MessageHandler(filters.Regex(HOME), go_home),
         ],
         FEATURES: [
             MessageHandler(filters.Regex('Триместри'), trimesters),

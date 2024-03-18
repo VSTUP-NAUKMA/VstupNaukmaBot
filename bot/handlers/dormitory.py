@@ -26,7 +26,7 @@ async def bachelors(update: Update, context: CallbackContext) -> int:
 
 
 async def orders(update: Update, context: CallbackContext) -> int:
-    buttons = [['Вартість', 'Перелік документів']]
+    buttons = [['Процес, вартість та оплата', 'Перелік документів']]
     return await generic_reply(update, 'Поселення: Оберіть опцію', buttons, ORDERS, back_button=True, home_button=True)
 
 
@@ -91,7 +91,7 @@ dormitory_handler = ConversationHandler(
             MessageHandler(filters.Regex(HOME), go_home),
         ],
         ORDERS: [
-            MessageHandler(filters.Regex('Вартість'), price),
+            MessageHandler(filters.Regex('Процес, вартість та оплата'), price),
             MessageHandler(filters.Regex('Перелік документів'), document_review),
             MessageHandler(filters.Regex(BACK), dormitory),
             MessageHandler(filters.Regex(HOME), go_home),
