@@ -15,11 +15,11 @@ from bot.handlers.admission import admission_handler
 from bot.handlers.student_life import student_life_handler
 from bot.handlers.study_process import study_process_handler
 from bot.utils.config import load_env
-from bot.utils.utils import shutdown_signal_handler
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 if __name__ == '__main__':
+
     load_env()
     persistence = PicklePersistence(filepath="bot.pickle")
     application = Application.builder().token(os.getenv('TELEGRAM_BOT_TOKEN')).persistence(
@@ -40,10 +40,8 @@ if __name__ == '__main__':
     asyncio.set_event_loop(loop)
     loop.create_task(clear_pending_replies(86400))  # 24 hours
 
-    loop = asyncio.get_event_loop()
-
-    for signame in ('SIGINT', 'SIGTERM'):
-        loop.add_signal_handler(getattr(signal, signame),
-                                lambda: asyncio.create_task(shutdown_signal_handler(application, persistence)))
-
     application.run_polling(allowed_updates=Update.ALL_TYPES)
+
+
+
+
