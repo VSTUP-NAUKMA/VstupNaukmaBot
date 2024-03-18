@@ -41,7 +41,9 @@ if __name__ == '__main__':
     loop.create_task(clear_pending_replies(86400))  # 24 hours
 
     loop = asyncio.get_event_loop()
-    signal.signal(signal.SIGINT, lambda s, f: shutdown_signal_handler(application, persistence))
-    signal.signal(signal.SIGTERM, lambda s, f: shutdown_signal_handler(application, persistence))
+
+    for signame in ('SIGINT', 'SIGTERM'):
+        loop.add_signal_handler(getattr(signal, signame),
+                                lambda: asyncio.create_task(shutdown_signal_handler(application, persistence)))
 
     application.run_polling(allowed_updates=Update.ALL_TYPES)
