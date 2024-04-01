@@ -5,8 +5,10 @@ CHOOSING = 1
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    reply_keyboard = [['Вступ на навчання', 'Навчальний процес', 'Гуртожитки'],
-                      ['Студентське життя', 'Контакти', 'Чат-підтримка']]
+    reply_keyboard = [['Вступ на навчання', 'Система вступу'],
+                      ['Студентське життя', 'Навчальний процес'],
+                      ['Контакти', 'Гуртожитки'],
+                      ['Чат-підтримка', 'Приколи']]
     keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
     await update.message.reply_text("Привіт! Обери потрібний розділ", reply_markup=keyboard_markup)
 
