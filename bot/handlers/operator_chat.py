@@ -91,8 +91,8 @@ async def go_home(update: Update, context: CallbackContext) -> int:
     user_chat_id = update.effective_chat.id
     global pending_replies
     pending_replies = {k: v for k, v in pending_replies.items() if v != user_chat_id}
-    from bot.handlers.start import start
-    await start(update, context)
+    from bot.handlers.start import home
+    await home(update, context)
     return ConversationHandler.END
 
 

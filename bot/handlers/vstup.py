@@ -5,37 +5,60 @@ from bot.utils.utils import generic_reply, go_home  # Імпорт з загал
 
 BACK = 'Назад'
 HOME = 'На головну'
-STUDENTLIFE, OSS, SO = range(3)
+VSTUP, VSTUP_END = range(2)
 
 
 async def vstup_system(update: Update, context: CallbackContext) -> int:
-    buttons = [['Опис', 'Дати вступної компанії'],
+    print("asd123")
+    buttons = [['Опис', 'Дати вступної кампанії'],
                ['Документи', 'Електронний кабінет'],
                ['Сайт приймальної комісії']]
-    return await generic_reply(update, 'Оберіть категорію:', buttons, STUDENTLIFE, back_button=True)
+    return await generic_reply(update, 'Оберіть категорію:', buttons, VSTUP, back_button=True)
 
 
-async def oss(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, 'ск топ', [], OSS, back_button=True, home_button=True,
+async def descr(update: Update, context: CallbackContext) -> int:
+    return await generic_reply(update, 'ск топ', [], VSTUP_END, back_button=True, home_button=True,
                                back_home_row=True)
 
 
-async def so(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, 'Сошка вступ навукма топ', [], SO, back_button=True, home_button=True,
+async def dates(update: Update, context: CallbackContext) -> int:
+    return await generic_reply(update, 'Сошка вступ навукма топ', [], VSTUP_END, back_button=True, home_button=True,
+                               back_home_row=True)
+
+
+async def cabinet(update: Update, context: CallbackContext) -> int:
+    return await generic_reply(update, 'Сошка вступ навукма топ', [], VSTUP_END, back_button=True, home_button=True,
+                               back_home_row=True)
+
+
+async def documents(update: Update, context: CallbackContext) -> int:
+    return await generic_reply(update, 'Сошка вступ навукма топ', [], VSTUP_END, back_button=True, home_button=True,
+                               back_home_row=True)
+
+
+async def site(update: Update, context: CallbackContext) -> int:
+    return await generic_reply(update, 'Сошка вступ навукма топ', [], VSTUP_END, back_button=True, home_button=True,
                                back_home_row=True)
 
 
 vstup_handler = ConversationHandler(
     entry_points=[MessageHandler(filters.Regex('Система вступу'), vstup_system)],
     states={
-        STUDENTLIFE: [
-            MessageHandler(filters.Regex('Органи студентського самоврядування'), oss),
-            MessageHandler(filters.Regex('Студентські організації'), so),
+        VSTUP: [
+            MessageHandler(filters.Regex('Опис'), descr),
+            MessageHandler(filters.Regex('Дати вступної кампанії'), dates),
+            MessageHandler(filters.Regex('Електронний кабінет'), cabinet),
+            MessageHandler(filters.Regex('Документи'), documents),
+            MessageHandler(filters.Regex('Сайт приймальної комісії'), site),
             MessageHandler(filters.Regex(BACK), go_home),
         ],
+        VSTUP_END: [
+            MessageHandler(filters.Regex(BACK), vstup_system),
+            MessageHandler(filters.Regex(HOME), go_home),
+        ]
 
     },
     fallbacks=[],
-    name='vstup_system',
+    name='vstup_handler',
     persistent=True,
 )
