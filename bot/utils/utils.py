@@ -1,10 +1,10 @@
-import asyncio
 import json
-import logging
 import os
 
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update
 from telegram.ext import CallbackContext, ConversationHandler
+
+from bot.handlers.start import home
 
 BACK = 'Назад'
 HOME = 'На головну'
@@ -44,8 +44,7 @@ async def generic_reply(update, text, buttons, state, back_button=False, home_bu
 
 
 async def go_home(update: Update, context: CallbackContext) -> int:
-    from bot.handlers.start import start
-    await start(update, context)
+    await home(update, context)
     return ConversationHandler.END
 
 

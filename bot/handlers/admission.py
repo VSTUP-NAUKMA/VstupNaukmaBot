@@ -20,9 +20,9 @@ pattern = '^(' + '|'.join(all_subjects) + ')$'
 
 
 async def go_home(update: Update, context: CallbackContext) -> int:
-    from bot.handlers.start import start
+    from bot.handlers.start import home
     await clear_scores(context)
-    await start(update, context)
+    await home(update, context)
     return ConversationHandler.END
 
 
