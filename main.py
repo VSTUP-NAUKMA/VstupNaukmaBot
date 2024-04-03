@@ -10,6 +10,7 @@ from telegram.ext import Application, CallbackQueryHandler, PicklePersistence
 from bot.handlers.contacts import contacts_handler
 from bot.handlers.dormitory import dormitory_handler
 from bot.handlers.operator_chat import reply_handler, button_callback, clear_pending_replies, operator_chat_handler
+from bot.handlers.prikoly import prikoly_handler
 from bot.handlers.start import start_handler
 from bot.handlers.admission import admission_handler
 from bot.handlers.student_life import student_life_handler
@@ -32,6 +33,7 @@ if __name__ == '__main__':
     application.add_handler(student_life_handler)
     application.add_handler(contacts_handler)
     application.add_handler(study_process_handler)
+    application.add_handler(prikoly_handler)
 
     application.add_handler(button_handler)
     application.add_handler(reply_handler)

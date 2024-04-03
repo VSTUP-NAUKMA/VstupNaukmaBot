@@ -2,6 +2,7 @@ from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters
 
 from bot.handlers.operator_chat import go_home
+from bot.utils.fields import CONTACTS_TEXT
 from bot.utils.utils import generic_reply
 
 BACK = 'Назад'
@@ -10,7 +11,7 @@ CONTACTS = 1
 
 
 async def contacts(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, 'Контакти текст', [], CONTACTS, back_button=True,
+    return await generic_reply(update, CONTACTS_TEXT, [], CONTACTS, back_button=True,
                                back_home_row=True)
 
 
