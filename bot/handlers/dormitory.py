@@ -73,7 +73,7 @@ dormitory_handler = ConversationHandler(
         ],
         BACHELORS: [
             MessageHandler(filters.Regex('Троєщина'), troy),
-            MessageHandler(filters.Regex('Харківському шосе'), kharyok),
+            MessageHandler(filters.Regex('Харківське шосе'), kharyok),
             MessageHandler(filters.Regex('Джона Маккейна'), makkeina),
             MessageHandler(filters.Regex(BACK), dormitory),
             MessageHandler(filters.Regex(HOME), go_home),
