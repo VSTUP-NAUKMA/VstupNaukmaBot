@@ -3,22 +3,17 @@ from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filt
 
 CHOOSING = 1
 
+reply_keyboard = [['Вступ на навчання', 'Система вступу'],
+                  ['Студентське життя', 'Навчальний процес'],
+                  ['Контакти', 'Гуртожитки'],
+                  ['Чат-підтримка', 'Хочу приколюху 😜']]
+keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    reply_keyboard = [['Вступ на навчання', 'Система вступу'],
-                      ['Студентське життя', 'Навчальний процес'],
-                      ['Контакти', 'Гуртожитки'],
-                      ['Чат-підтримка', 'Хочу приколюху 😜']]
-    keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
     await update.message.reply_text("Текст старт", reply_markup=keyboard_markup)
 
 
 async def home(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    reply_keyboard = [['Вступ на навчання', 'Система вступу'],
-                      ['Студентське життя', 'Навчальний процес'],
-                      ['Контакти', 'Гуртожитки'],
-                      ['Чат-підтримка', 'Хочу приколюху 😜']]
-    keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
     await update.message.reply_text("Привіт! Обери потрібний розділ", reply_markup=keyboard_markup)
 
 

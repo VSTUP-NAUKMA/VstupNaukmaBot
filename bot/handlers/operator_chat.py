@@ -8,6 +8,8 @@ from bot.utils.config import logger
 
 IN_CONVERSATION = 1
 pending_replies = {}
+user_nicknames = {}
+nickname_counter = 1
 
 
 async def clear_pending_replies(interval: int):
@@ -40,13 +42,23 @@ async def unsuported_type(update: Update, _: CallbackContext) -> int:
 
 
 async def send_to_operator(update: Update, _: CallbackContext) -> int:
-    # TELEGRAM_SUPPORT_CHAT_ID=-1002086897896
+    global nickname_counter
     support_chat_id = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
     user = update.message.from_user
-    username = f'@{user.username}' if user.username else 'Без ніку 😭'
+    user_id = user.id
+
+    if user.username:
+        username = f'@{user.username}'
+    else:
+        if user_id not in user_nicknames:
+            user_nicknames[user_id] = f'User_{nickname_counter}'
+            nickname_counter += 1
+        username = user_nicknames[user_id]
+
+    caption = f'{username}'
+
     message: Message = update.message
     message_caption = message.caption if message.caption is not None else ""
-    caption = f'{username}'
 
     button = InlineKeyboardButton(text='Не вибрано', callback_data='not_pressed')
     reply_markup = InlineKeyboardMarkup([[button]])
@@ -61,6 +73,7 @@ async def send_to_operator(update: Update, _: CallbackContext) -> int:
         sent_message = await _.bot.send_animation(chat_id=support_chat_id, animation=message.animation.file_id,
                                                   caption=f'{caption}\n', reply_markup=reply_markup)
     elif message.sticker:
+        await _.bot.send_message(chat_id=support_chat_id, text=caption)
         sent_message = await _.bot.send_sticker(chat_id=support_chat_id, sticker=message.sticker.file_id,
                                                 reply_markup=reply_markup)
     elif message.voice:
@@ -70,6 +83,7 @@ async def send_to_operator(update: Update, _: CallbackContext) -> int:
         sent_message = await _.bot.send_video(chat_id=support_chat_id, video=message.video.file_id, caption=caption,
                                               reply_markup=reply_markup)
     elif message.location:
+        await _.bot.send_message(chat_id=support_chat_id, text=caption)
         sent_message = await _.bot.send_location(chat_id=support_chat_id, latitude=message.location.latitude,
                                                  longitude=message.location.longitude,
                                                  reply_markup=reply_markup)
@@ -124,6 +138,8 @@ async def forward_reply_to_user(update: Update, _: CallbackContext) -> None:
             await send_document(_, to_chat_id, message)
         elif message.video:
             await send_video(_, to_chat_id, message)
+        elif message.video_note:
+            await send_video_note(_, to_chat_id, message)
         elif message.location:
             await send_location(_, to_chat_id, message)
         elif message.voice:
@@ -154,6 +170,7 @@ async def send_animation(_, chat_id, message):
 
 async def send_sticker(_, chat_id, message):
     sticker_file_id = message.sticker.file_id
+
     await _.bot.send_sticker(chat_id=chat_id, sticker=sticker_file_id)
 
 
@@ -162,16 +179,24 @@ async def send_document(_, chat_id, message):
 
 
 async def send_video(_, chat_id, message):
-    await _.bot.send_video(chat_id=chat_id, video=message.document.file_id, caption=message.caption)
+    await _.bot.send_video(chat_id=chat_id, video=message.video.file_id, caption=message.caption)
+
+
+async def send_video_note(_, chat_id, message):
+    await _.bot.send_video_note(chat_id=chat_id, video_note=message.video_note)
 
 
 async def send_location(_, chat_id, message):
-    await _.bot.send_location(chat_id=chat_id, latitude=message.location.latitude, longitude=message.location.longitude,
-                              caption=message.caption)
+    await _.bot.send_location(chat_id=chat_id, latitude=message.location.latitude, longitude=message.location.longitude)
 
 
 async def send_voice(_, chat_id, message):
     await _.bot.send_voice(chat_id=chat_id, voice=message.voice.file_id)
+
+
+async def chat_id(update: Update, context: CallbackContext):
+    chat_id = update.effective_chat.id
+    await context.bot.send_message(chat_id=chat_id, text=f"Chat ID: {chat_id}")
 
 
 operator_chat_handler = ConversationHandler(

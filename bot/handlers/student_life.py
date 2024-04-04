@@ -7,9 +7,8 @@ BACK = 'Назад'
 HOME = 'На головну'
 STUDENTLIFE, OSS, SO = range(3)
 
-
+buttons = [['Органи студентського самоврядування', 'Студентські організації']]
 async def student_life(update: Update, context: CallbackContext) -> int:
-    buttons = [['Органи студентського самоврядування', 'Студентські організації']]
     return await generic_reply(update, 'Оберіть категорію:', buttons, STUDENTLIFE, back_button=True)
 
 

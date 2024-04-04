@@ -4,30 +4,40 @@ import random
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters
 
+IMAGE_PATHS = []
 
-def get_random_image(directory):
+
+def load_images(directory):
+    global IMAGE_PATHS
     if not os.path.exists(directory):
-        return "Директорія не знайдена"
+        print("Directory not found")
+        return
 
-    files = [os.path.join(directory, f) for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
-
-    if not files:
-        return "Файли не знайдені у директорії"
-
-    return random.choice(files)
-
+    IMAGE_PATHS = [os.path.join(directory, f) for f in os.listdir(directory) if
+                   os.path.isfile(os.path.join(directory, f))]
+    if not IMAGE_PATHS:
+        print("No files found in directory")
 
 
+load_images("bot/photos1")
+
+
+def get_random_image():
+    if not IMAGE_PATHS:
+        return "Files not found in directory"
+    return random.choice(IMAGE_PATHS)
+
+
+REPLY_KEYBOARD = [['Вступ на навчання', 'Система вступу'],
+                  ['Студентське життя', 'Навчальний процес'],
+                  ['Контакти', 'Гуртожитки'],
+                  ['Чат-підтримка', 'Хочу приколюху 😜']]
+KEYBOARD_MARKUP = ReplyKeyboardMarkup(REPLY_KEYBOARD, resize_keyboard=True)
 
 
 async def send_meme(update: Update, context: CallbackContext) -> int:
+    await update.message.reply_photo(get_random_image(), reply_markup=KEYBOARD_MARKUP)
 
-    reply_keyboard = [['Вступ на навчання', 'Система вступу'],
-                      ['Студентське життя', 'Навчальний процес'],
-                      ['Контакти', 'Гуртожитки'],
-                      ['Чат-підтримка', 'Хочу приколюху 😜']]
-    keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
-    await update.message.reply_photo(get_random_image("bot/photos1"), reply_markup=keyboard_markup)
 
 prikoly_handler = ConversationHandler(
     entry_points=[MessageHandler(filters.Regex('Хочу приколюху 😜'), send_meme)],

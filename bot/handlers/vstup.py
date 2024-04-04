@@ -7,12 +7,11 @@ BACK = 'Назад'
 HOME = 'На головну'
 VSTUP, VSTUP_END = range(2)
 
+buttons = [['Опис', 'Дати вступної кампанії'],
+           ['Документи', 'Електронний кабінет'],
+           ['Сайт приймальної комісії']]
 
 async def vstup_system(update: Update, context: CallbackContext) -> int:
-    print("asd123")
-    buttons = [['Опис', 'Дати вступної кампанії'],
-               ['Документи', 'Електронний кабінет'],
-               ['Сайт приймальної комісії']]
     return await generic_reply(update, 'Оберіть категорію:', buttons, VSTUP, back_button=True)
 
 
