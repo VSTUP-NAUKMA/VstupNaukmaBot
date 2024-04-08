@@ -26,12 +26,12 @@ async def bachelors(update: Update, context: CallbackContext) -> int:
 
 
 async def orders(update: Update, context: CallbackContext) -> int:
-    buttons = [['Процес, вартість та оплата', 'Перелік документів']]
+    buttons = [['Поселення, вартість та оплата', 'Перелік документів']]
     return await generic_reply(update, 'Поселення: Оберіть опцію', buttons, ORDERS, back_button=True, home_button=True)
 
 
 async def advices(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, 'троя говно маккейна говно харьок топ', [], ADVICE, back_button=True,
+    return await generic_reply(update, ADVICES_TEXT, [], ADVICE, back_button=True,
                                home_button=True,
                                back_home_row=True)
 
@@ -52,7 +52,7 @@ async def makkeina(update: Update, context: CallbackContext) -> int:
 
 
 async def price(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, 'ДОРОГО', [], ORDERS_NEXT, back_button=True, home_button=True,
+    return await generic_reply(update, PRICE_TEXT, [], ORDERS_NEXT, back_button=True, home_button=True,
                                back_home_row=True)
 
 
@@ -91,7 +91,7 @@ dormitory_handler = ConversationHandler(
             MessageHandler(filters.Regex(HOME), go_home),
         ],
         ORDERS: [
-            MessageHandler(filters.Regex('Процес, вартість та оплата'), price),
+            MessageHandler(filters.Regex('Поселення, вартість та оплата'), price),
             MessageHandler(filters.Regex('Перелік документів'), document_review),
             MessageHandler(filters.Regex(BACK), dormitory),
             MessageHandler(filters.Regex(HOME), go_home),

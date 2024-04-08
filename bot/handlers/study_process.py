@@ -49,12 +49,12 @@ async def campus(update: Update, context: CallbackContext) -> int:
 
 
 async def term_difference(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, TRIMESTER_TEXT, [], DIFFERENCE_LAST_CHOICE, back_button=True, home_button=True,
+    return await generic_reply(update, DIFFERENCE_TEXT, [], DIFFERENCE_LAST_CHOICE, back_button=True, home_button=True,
                                back_home_row=True)
 
 
 async def grade_system(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, TRIMESTER_TEXT, [], DIFFERENCE_LAST_CHOICE, back_button=True, home_button=True,
+    return await generic_reply(update, GRADE_SYSTEM, [], DIFFERENCE_LAST_CHOICE, back_button=True, home_button=True,
                                back_home_row=True)
 
 
@@ -74,7 +74,7 @@ async def organization(update: Update, context: CallbackContext) -> int:
 
 
 async def teachers(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, TRIMESTER_TEXT, [], FEATURES_LAST_CHOICE, back_button=True, home_button=True,
+    return await generic_reply(update, TEACHER_TEXT, [], FEATURES_LAST_CHOICE, back_button=True, home_button=True,
                                back_home_row=True)
 
 
@@ -109,22 +109,22 @@ async def work(update: Update, context: CallbackContext) -> int:
 
 
 async def bachelor(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, WORK_TEXT, [], PROGRAMS_LAST_CHOICE, back_button=True, home_button=True,
-                               back_home_row=True)
+    return await generic_reply(update, SERT_BACHELOR, [], PROGRAMS_LAST_CHOICE, back_button=True, home_button=True,
+                               back_home_row=True, parse_mode='Markdown')
 
 
 async def master(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, WORK_TEXT, [], PROGRAMS_LAST_CHOICE, back_button=True, home_button=True,
-                               back_home_row=True)
+    return await generic_reply(update, SERT_MASTER, [], PROGRAMS_LAST_CHOICE, back_button=True, home_button=True,
+                               back_home_row=True, parse_mode='Markdown')
 
 
 async def buildings(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, WORK_TEXT, [], CAMPUS_LAST_CHOICE, back_button=True, home_button=True,
+    return await generic_reply(update, BUILDINGS_TEXT, [], CAMPUS_LAST_CHOICE, back_button=True, home_button=True,
                                back_home_row=True)
 
 
 async def chill_zones(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, WORK_TEXT, [], CAMPUS_LAST_CHOICE, back_button=True, home_button=True,
+    return await generic_reply(update, CHILL_TEXT, [], CAMPUS_LAST_CHOICE, back_button=True, home_button=True,
                                back_home_row=True)
 
 

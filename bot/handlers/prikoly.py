@@ -19,7 +19,7 @@ def load_images(directory):
         print("No files found in directory")
 
 
-load_images("bot/photos1")
+load_images("bot/photos")
 
 
 def get_random_image():
