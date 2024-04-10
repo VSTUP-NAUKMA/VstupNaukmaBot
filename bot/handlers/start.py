@@ -1,7 +1,7 @@
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filters
 
-CHOOSING = 1
+
 
 reply_keyboard = [['Вступ на навчання', 'Система вступу'],
                   ['Студентське життя', 'Навчальний процес'],
@@ -10,6 +10,7 @@ reply_keyboard = [['Вступ на навчання', 'Система всту�
 keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data.clear()
     await update.message.reply_text("Текст старт", reply_markup=keyboard_markup)
 
 
