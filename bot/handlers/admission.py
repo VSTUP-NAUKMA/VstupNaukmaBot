@@ -1,5 +1,3 @@
-from threading import Thread
-
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, filters, CommandHandler, CallbackQueryHandler
@@ -69,10 +67,13 @@ async def answer(update: Update, context: CallbackContext):
     if update.message.text != BACK:
         context.user_data['question'] = update.message.text
     if context.user_data.get('question') == 'Дисципліни':
-        return await show_specialty_website(update, context, 'Дисципліни цієї освітньої програми можна переглянути за')
+        await show_specialty_website(update, context, 'Дисципліни цієї освітньої програми можна переглянути за')
+        return ANSWER
+
     elif context.user_data.get('question') == 'Сайт конкурс':
-        return await show_specialty_website(update, context, 'Переглянути перелік минулорічних заявок, поданих на цю '
-                                                             'спеціальність, можеш за')
+        await show_specialty_website(update, context, 'Переглянути перелік минулорічних заявок, поданих на цю '
+                                                      'спеціальність, можеш за')
+        return ANSWER
     answer_reply = \
         warehouse[context.user_data.get('degree')][context.user_data.get('faculty')][
             context.user_data.get('speciality')][
