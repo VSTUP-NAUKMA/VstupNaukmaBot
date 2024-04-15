@@ -11,6 +11,7 @@ buttons = [['Опис', 'Дати вступної кампанії'],
            ['Документи', 'Електронний кабінет'],
            ['Сайт приймальної комісії']]
 
+
 async def vstup_system(update: Update, context: CallbackContext) -> int:
     return await generic_reply(update, 'Оберіть категорію:', buttons, VSTUP, back_button=True)
 

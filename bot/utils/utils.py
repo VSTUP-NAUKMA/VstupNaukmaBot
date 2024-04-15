@@ -37,7 +37,8 @@ async def generic_reply(update, text, buttons, state, back_button=False, home_bu
     reply_markup = get_keyboard(buttons, add_back_button=back_button, add_home_button=home_button,
                                 is_final_method=back_home_row)
     if parse_mode:
-        await update.message.reply_text(text, reply_markup=reply_markup, parse_mode=parse_mode, disable_web_page_preview=True)
+        await update.message.reply_text(text, reply_markup=reply_markup, parse_mode=parse_mode,
+                                        disable_web_page_preview=True)
     else:
         await update.message.reply_text(text, reply_markup=reply_markup)
     return state

@@ -1,13 +1,12 @@
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filters
 
-
-
 reply_keyboard = [['Вступ на навчання', 'Система вступу'],
                   ['Студентське життя', 'Навчальний процес'],
                   ['Контакти', 'Гуртожитки'],
                   ['Чат-підтримка', 'Хочу приколюху 😜']]
 keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.clear()
