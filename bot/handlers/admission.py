@@ -1,3 +1,5 @@
+from threading import Thread
+
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, filters, CommandHandler, CallbackQueryHandler

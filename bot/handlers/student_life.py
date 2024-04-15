@@ -1,6 +1,7 @@
 from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters
 
+from bot.utils.fields import STUDENTSORG_TEXT, STUDENTSOSS_TEXT
 from bot.utils.utils import generic_reply, go_home  # Імпорт з загального файлу
 
 BACK = 'Назад'
@@ -15,12 +16,12 @@ async def student_life(update: Update, context: CallbackContext) -> int:
 
 
 async def oss(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, 'ск топ', [], OSS, back_button=True, home_button=True,
+    return await generic_reply(update, STUDENTSOSS_TEXT, [], OSS, back_button=True, home_button=True,
                                back_home_row=True)
 
 
 async def so(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, 'Сошка вступ навукма топ', [], SO, back_button=True, home_button=True,
+    return await generic_reply(update, STUDENTSORG_TEXT, [], SO, back_button=True, home_button=True,
                                back_home_row=True)
 
 
