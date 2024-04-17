@@ -74,6 +74,10 @@ async def answer(update: Update, context: CallbackContext):
         await show_specialty_website(update, context, 'Переглянути перелік минулорічних заявок, поданих на цю '
                                                       'спеціальність, можеш за')
         return ANSWER
+    elif context.user_data.get('question') == "Фахове випробування":
+        await show_specialty_website(update, context,
+                                     '⏰ З програмою фахового вступного випробування в 2023 можеш ознайомитись за')
+        return ANSWER
     answer_reply = \
         warehouse[context.user_data.get('degree')][context.user_data.get('faculty')][
             context.user_data.get('speciality')][
