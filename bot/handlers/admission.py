@@ -180,6 +180,7 @@ async def calculate_final_score(update: Update, context: CallbackContext):
     await update.callback_query.edit_message_text(text=f"Ваш конкурсний бал: {final_score}")
 
 
+
 async def score_received(update: Update, context: CallbackContext) -> int:
     user_input = update.message.text.strip()
     try:
