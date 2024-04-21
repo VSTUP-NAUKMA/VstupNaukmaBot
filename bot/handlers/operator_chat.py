@@ -1,7 +1,6 @@
 import asyncio
 import os
 
-from accelerate.commands.config import update
 from telegram import Update, Message, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import CallbackContext, MessageHandler, filters, ConversationHandler, CommandHandler
 
