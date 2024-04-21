@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters, CommandHandler
 
 from bot.handlers.start import fresh_start
-from bot.utils.utils import generic_reply, go_home, unlucky  # Імпорт з загального файлу
+from bot.utils.utils import generic_reply, go_home, unlucky
 
 BACK = 'Назад'
 HOME = 'На головну'
