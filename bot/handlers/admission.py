@@ -35,7 +35,9 @@ async def admission(update: Update, context: CallbackContext) -> int:
 async def faculty(update: Update, context: CallbackContext) -> int:
     if update.message.text != BACK:
         context.user_data['degree'] = update.message.text
-    degree_info = warehouse.get(context.user_data.get('degree'), {})
+
+    degree = context.user_data.get('degree')
+    degree_info = warehouse.get(degree, {})
 
     if not degree_info:
         return await unlucky(update, context)
@@ -61,7 +63,6 @@ async def speciality(update: Update, context: CallbackContext) -> int:
         return await unlucky(update, context)
 
     buttons = [[specialty] for specialty in faculty_info.keys()]
-    print(len(buttons))
 
     return await generic_reply(update, 'Оберіть спеціальність:', buttons, SPECIALITY, back_button=True,
                                home_button=True)
@@ -245,15 +246,15 @@ async def score_received(update: Update, context: CallbackContext) -> int:
 admission_handler = ConversationHandler(
     entry_points=[MessageHandler(filters.Regex('Вступ на навчання'), admission)],
     states={
-        ADMISSION: [MessageHandler(filters.Regex('Бакалаврат|Магістратура'), faculty),
+        ADMISSION: [MessageHandler(~filters.COMMAND & ~filters.Regex('Назад|На головну') & filters.Regex('.*'), faculty),
                     MessageHandler(filters.Regex(BACK), go_home)],
         FACULTY: [MessageHandler(filters.Regex(BACK), admission),
-                  MessageHandler(filters.Regex(HOME), go_home), MessageHandler(filters.Regex('.*'), speciality)],
+                  MessageHandler(filters.Regex(HOME), go_home), MessageHandler(~filters.COMMAND & filters.Regex('.*'), speciality)],
         SPECIALITY: [MessageHandler(filters.Regex(BACK), faculty),
-                     MessageHandler(filters.Regex(HOME), go_home), MessageHandler(filters.Regex('.*'), question)],
+                     MessageHandler(filters.Regex(HOME), go_home), MessageHandler(~filters.COMMAND & filters.Regex('.*'), question)],
         QUESTION: [MessageHandler(filters.Regex('Розрахувати бали'), calculate),
                    MessageHandler(filters.Regex(BACK), speciality),
-                   MessageHandler(filters.Regex(HOME), go_home), MessageHandler(filters.Regex('.*'), answer)],
+                   MessageHandler(filters.Regex(HOME), go_home), MessageHandler(~filters.COMMAND & filters.Regex('.*'), answer)],
         CALCULATE: [
             CallbackQueryHandler(enter_score, pattern=pattern),
             CallbackQueryHandler(calculate_final_score, pattern='^calculate_final_score$'),
@@ -265,7 +266,7 @@ admission_handler = ConversationHandler(
             MessageHandler(filters.Regex(BACK), question), MessageHandler(filters.Regex(HOME), go_home)],
 
     },
-    fallbacks=[CommandHandler('reset', fresh_start), MessageHandler(filters.TEXT, unlucky)],
+    fallbacks=[CommandHandler('reset', fresh_start)],
     name="admission-handler",
     persistent=True,
     per_chat=True
