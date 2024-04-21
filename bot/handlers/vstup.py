@@ -1,7 +1,8 @@
 from telegram import Update
-from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters
+from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters, CommandHandler
 
-from bot.utils.utils import generic_reply, go_home  # Імпорт з загального файлу
+from bot.handlers.start import fresh_start
+from bot.utils.utils import generic_reply, go_home, unlucky  # Імпорт з загального файлу
 
 BACK = 'Назад'
 HOME = 'На головну'
@@ -58,7 +59,7 @@ vstup_handler = ConversationHandler(
         ]
 
     },
-    fallbacks=[],
+    fallbacks=[CommandHandler('reset', fresh_start), MessageHandler(filters.TEXT, unlucky)],
     name='vstup_handler',
     persistent=True,
 )

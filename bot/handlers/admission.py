@@ -2,6 +2,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, filters, CommandHandler, CallbackQueryHandler
 
+from bot.handlers.start import fresh_start
 from bot.utils.utils import *
 
 ADMISSION, FACULTY, SPECIALITY, QUESTION, ANSWER, CALCULATE = range(6)
@@ -34,7 +35,12 @@ async def admission(update: Update, context: CallbackContext) -> int:
 async def faculty(update: Update, context: CallbackContext) -> int:
     if update.message.text != BACK:
         context.user_data['degree'] = update.message.text
-    buttons = list(map(lambda x: [x], warehouse[context.user_data.get('degree')].keys()))
+    degree_info = warehouse.get(context.user_data.get('degree'), {})
+
+    if not degree_info:
+        return await unlucky(update, context)
+
+    buttons = [[degree] for degree in degree_info.keys()]
     return await generic_reply(update, 'Оберіть факультет:', buttons, FACULTY, back_button=True, home_button=True)
 
 
@@ -47,8 +53,16 @@ async def clear_scores(context: CallbackContext):
 async def speciality(update: Update, context: CallbackContext) -> int:
     if update.message.text != BACK:
         context.user_data['faculty'] = update.message.text
-    buttons = list(
-        map(lambda x: [x], warehouse[context.user_data.get('degree')][context.user_data.get('faculty')].keys()))
+    degree = context.user_data.get('degree')
+    faculty = context.user_data.get('faculty')
+    faculty_info = warehouse.get(degree, {}).get(faculty, {})
+
+    if not faculty_info:
+        return await unlucky(update, context)
+
+    buttons = [[specialty] for specialty in faculty_info.keys()]
+    print(len(buttons))
+
     return await generic_reply(update, 'Оберіть спеціальність:', buttons, SPECIALITY, back_button=True,
                                home_button=True)
 
@@ -58,31 +72,39 @@ async def question(update: Update, context: CallbackContext) -> int:
         await clear_scores(context)
     else:
         context.user_data['speciality'] = update.message.text
-    buttons = list(map(lambda x: [x], warehouse[context.user_data.get('degree')][context.user_data.get('faculty')][
-        context.user_data.get('speciality')].keys()))
+
+    speciality_info = warehouse.get(context.user_data.get('degree'), {}).get(
+        context.user_data.get('faculty'), {}).get(context.user_data.get('speciality'), {})
+
+    if not speciality_info:
+        return await unlucky(update, context)
+
+    buttons = [[question] for question in speciality_info.keys()]
     return await generic_reply(update, 'Оберіть питання:', buttons, QUESTION, back_button=True, home_button=True)
 
 
 async def answer(update: Update, context: CallbackContext):
     if update.message.text != BACK:
         context.user_data['question'] = update.message.text
-    if context.user_data.get('question') == 'Дисципліни':
-        await show_specialty_website(update, context, 'Дисципліни цієї освітньої програми можна переглянути за')
+
+    question_key = context.user_data.get('question')
+    answer_info = warehouse.get(context.user_data.get('degree'), {}).get(
+        context.user_data.get('faculty'), {}).get(context.user_data.get('speciality'), {}).get(question_key, '')
+
+    if question_key in ['Дисципліни', 'Сайт конкурс', 'Фахове випробування']:
+        message_prefix = {
+            'Дисципліни': 'Дисципліни цієї освітньої програми можна переглянути за',
+            'Сайт конкурс': 'Переглянути перелік минулорічних заявок, поданих на цю спеціальність, можеш за',
+            'Фахове випробування': '⏰ З програмою фахового вступного випробування в 2023 можеш ознайомитись за'
+        }
+        await show_specialty_website(update, context, message_prefix[question_key])
         return ANSWER
 
-    elif context.user_data.get('question') == 'Сайт конкурс':
-        await show_specialty_website(update, context, 'Переглянути перелік минулорічних заявок, поданих на цю '
-                                                      'спеціальність, можеш за')
-        return ANSWER
-    elif context.user_data.get('question') == "Фахове випробування":
-        await show_specialty_website(update, context,
-                                     '⏰ З програмою фахового вступного випробування в 2023 можеш ознайомитись за')
-        return ANSWER
-    answer_reply = \
-        warehouse[context.user_data.get('degree')][context.user_data.get('faculty')][
-            context.user_data.get('speciality')][
-            context.user_data.get('question')]
-    return await generic_reply(update, f"{answer_reply}", [], ANSWER, back_button=True, home_button=True)
+    if not answer_info:
+        return await unlucky(update, context)
+
+    return await generic_reply(update, f"{answer_info}", [], ANSWER, back_button=True, home_button=True)
+
 
 
 async def show_specialty_website(update: Update, context: CallbackContext, text):
@@ -239,9 +261,10 @@ admission_handler = ConversationHandler(
             MessageHandler(filters.TEXT & ~filters.COMMAND, score_received)
         ],
         ANSWER: [
-            MessageHandler(filters.Regex(BACK), question), MessageHandler(filters.Regex(HOME), go_home)]
+            MessageHandler(filters.Regex(BACK), question), MessageHandler(filters.Regex(HOME), go_home)],
+
     },
-    fallbacks=[CommandHandler('start', admission)],
+    fallbacks=[CommandHandler('reset', fresh_start), MessageHandler(filters.TEXT, unlucky)],
     name="admission-handler",
     persistent=True,
     per_chat=True

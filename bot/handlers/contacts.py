@@ -1,9 +1,10 @@
 from telegram import Update
-from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters
+from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters, CommandHandler
 
 from bot.handlers.operator_chat import go_home
+from bot.handlers.start import fresh_start
 from bot.utils.fields import CONTACTS_TEXT
-from bot.utils.utils import generic_reply
+from bot.utils.utils import generic_reply, unlucky
 
 BACK = 'Назад'
 HOME = 'На головну'
@@ -23,7 +24,7 @@ contacts_handler = ConversationHandler(
         ],
 
     },
-    fallbacks=[],
+    fallbacks=[CommandHandler('reset', fresh_start), MessageHandler(filters.TEXT, unlucky)],
     name='contacts-handler',
     persistent=True,
 )

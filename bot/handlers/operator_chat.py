@@ -1,10 +1,13 @@
 import asyncio
 import os
 
+from accelerate.commands.config import update
 from telegram import Update, Message, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
-from telegram.ext import CallbackContext, MessageHandler, filters, ConversationHandler
+from telegram.ext import CallbackContext, MessageHandler, filters, ConversationHandler, CommandHandler
 
+from bot.handlers.start import fresh_start
 from bot.utils.config import logger
+from bot.utils.utils import unlucky
 
 IN_CONVERSATION = 1
 pending_replies = {}
@@ -32,13 +35,6 @@ async def connect_with_operator(update: Update, _: CallbackContext) -> int:
         reply_markup=keyboard_markup)
     return IN_CONVERSATION
 
-
-async def unsuported_type(update: Update, _: CallbackContext) -> int:
-    support_chat_id = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
-    message: Message = update.message
-    message_type = str(type(message))
-    await _.bot.send_message(chat_id=support_chat_id, text='Я ' + message_type + ' не підтримую)')
-    return IN_CONVERSATION
 
 
 async def send_to_operator(update: Update, _: CallbackContext) -> int:
@@ -107,6 +103,13 @@ async def go_home(update: Update, context: CallbackContext) -> int:
     pending_replies = {k: v for k, v in pending_replies.items() if v != user_chat_id}
     from bot.handlers.start import home
     await home(update, context)
+    return ConversationHandler.END
+
+async def go_fresh_home(update: Update, context: CallbackContext) -> int:
+    user_chat_id = update.effective_chat.id
+    global pending_replies
+    pending_replies = {k: v for k, v in pending_replies.items() if v != user_chat_id}
+    await fresh_start(update, context)
     return ConversationHandler.END
 
 
@@ -203,14 +206,14 @@ operator_chat_handler = ConversationHandler(
     entry_points=[MessageHandler(filters.Regex('Чат-підтримка'), connect_with_operator)],
     states={
         IN_CONVERSATION: [
-            MessageHandler(~filters.Regex('Завершити діалог') & (
+            MessageHandler(~filters.COMMAND & ~filters.Regex('Завершити діалог') & (
                     filters.TEXT | filters.PHOTO | filters.VOICE | filters.Document.ALL |
                     filters.ANIMATION | filters.Sticker.ALL | filters.VIDEO | filters.FORWARDED | filters.VIDEO | filters.LOCATION | filters.VIDEO_NOTE),
                            send_to_operator),
             MessageHandler(filters.Regex('Завершити діалог'), go_home),
         ],
     },
-    fallbacks=[MessageHandler(filters.ALL, unsuported_type)],
+    fallbacks=[CommandHandler('reset', go_fresh_home), MessageHandler(filters.TEXT, unlucky)],
     name='operator_chat-handler',
     persistent=True,
 )

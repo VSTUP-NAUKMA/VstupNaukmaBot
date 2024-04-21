@@ -2,7 +2,10 @@ import os
 import random
 
 from telegram import Update, ReplyKeyboardMarkup
-from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters
+from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters, CommandHandler
+
+from bot.handlers.start import fresh_start
+from bot.utils.utils import unlucky
 
 IMAGE_PATHS = []
 
@@ -44,7 +47,7 @@ prikoly_handler = ConversationHandler(
     states={
 
     },
-    fallbacks=[],
+    fallbacks=[CommandHandler('reset', fresh_start), MessageHandler(filters.TEXT, unlucky)],
     name='prikoly-handler',
     persistent=True,
 )

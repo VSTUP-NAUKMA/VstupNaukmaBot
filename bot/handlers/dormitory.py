@@ -1,8 +1,9 @@
 from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, MessageHandler, filters
 
+from bot.handlers.start import fresh_start
 from bot.utils.fields import *
-from bot.utils.utils import generic_reply, go_home
+from bot.utils.utils import generic_reply, go_home, unlucky
 
 BACK = 'Назад'
 HOME = 'На головну'
@@ -105,7 +106,7 @@ dormitory_handler = ConversationHandler(
             MessageHandler(filters.Regex(HOME), go_home),
         ]
     },
-    fallbacks=[CommandHandler('start', dormitory)],
+    fallbacks=[CommandHandler('reset', fresh_start), MessageHandler(filters.TEXT, unlucky)],
     name='dormitory-handler',
     persistent=True,
 )

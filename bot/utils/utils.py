@@ -70,3 +70,7 @@ def is_chat_id_registered(chat_id):
             if str(chat_id) == line.strip():
                 return True
     return False
+
+async def unlucky(update: Update, context: CallbackContext) -> int:
+    await update.message.reply_text("""Я тебе не розумію :(
+Використовуй клавіатуру знизу для комунікації зі мною""")
