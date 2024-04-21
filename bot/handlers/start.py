@@ -11,13 +11,18 @@ keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.message.from_user
-    username = user.username
-    if username:
+    username = user.username or str(user.id)
+    try:
+        with open("./usernames.txt", "r") as file:
+            existing_users = set(file.read().splitlines())
+    except FileNotFoundError:
+        existing_users = set()
+
+    if username not in existing_users:
         with open("./usernames.txt", "a") as file:
             file.write(username + "\n")
-    else:
-        with open("./usernames.txt", "a") as file:
-            file.write(str(user.id) + "\n")
+            existing_users.add(username)
+
     await update.message.reply_text("Текст старт", reply_markup=keyboard_markup)
 
 
