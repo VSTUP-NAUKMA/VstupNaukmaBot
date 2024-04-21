@@ -107,7 +107,6 @@ async def answer(update: Update, context: CallbackContext):
     return await generic_reply(update, f"{answer_info}", [], ANSWER, back_button=True, home_button=True)
 
 
-
 async def show_specialty_website(update: Update, context: CallbackContext, text):
     answer_reply = \
         warehouse[context.user_data.get('degree')][context.user_data.get('faculty')][
@@ -181,7 +180,6 @@ async def calculate_final_score(update: Update, context: CallbackContext):
     await update.callback_query.edit_message_text(text=f"Ваш конкурсний бал: {final_score}")
 
 
-
 async def score_received(update: Update, context: CallbackContext) -> int:
     user_input = update.message.text.strip()
     try:
@@ -246,15 +244,19 @@ async def score_received(update: Update, context: CallbackContext) -> int:
 admission_handler = ConversationHandler(
     entry_points=[MessageHandler(filters.Regex('Вступ на навчання'), admission)],
     states={
-        ADMISSION: [MessageHandler(~filters.COMMAND & ~filters.Regex('Назад|На головну') & filters.Regex('.*'), faculty),
-                    MessageHandler(filters.Regex(BACK), go_home)],
+        ADMISSION: [
+            MessageHandler(~filters.COMMAND & ~filters.Regex('Назад|На головну') & filters.Regex('.*'), faculty),
+            MessageHandler(filters.Regex(BACK), go_home)],
         FACULTY: [MessageHandler(filters.Regex(BACK), admission),
-                  MessageHandler(filters.Regex(HOME), go_home), MessageHandler(~filters.COMMAND & filters.Regex('.*'), speciality)],
+                  MessageHandler(filters.Regex(HOME), go_home),
+                  MessageHandler(~filters.COMMAND & filters.Regex('.*'), speciality)],
         SPECIALITY: [MessageHandler(filters.Regex(BACK), faculty),
-                     MessageHandler(filters.Regex(HOME), go_home), MessageHandler(~filters.COMMAND & filters.Regex('.*'), question)],
+                     MessageHandler(filters.Regex(HOME), go_home),
+                     MessageHandler(~filters.COMMAND & filters.Regex('.*'), question)],
         QUESTION: [MessageHandler(filters.Regex('Розрахувати бали'), calculate),
                    MessageHandler(filters.Regex(BACK), speciality),
-                   MessageHandler(filters.Regex(HOME), go_home), MessageHandler(~filters.COMMAND & filters.Regex('.*'), answer)],
+                   MessageHandler(filters.Regex(HOME), go_home),
+                   MessageHandler(~filters.COMMAND & filters.Regex('.*'), answer)],
         CALCULATE: [
             CallbackQueryHandler(enter_score, pattern=pattern),
             CallbackQueryHandler(calculate_final_score, pattern='^calculate_final_score$'),
