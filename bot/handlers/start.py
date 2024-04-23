@@ -3,7 +3,6 @@ import os
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filters, CallbackContext
 
-
 reply_keyboard = [['Вступ на навчання', 'Система вступу'],
                   ['Студентське життя', 'Навчальний процес'],
                   ['Контакти', 'Гуртожитки'],
@@ -20,7 +19,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_info = f"{username}, {first_name} {last_name}, {phone_number}"
 
     file_path = "./usernames.txt"
-
     try:
         with open(file_path, "r", encoding='utf-8') as file:
             existing_users = set(file.read().splitlines())
@@ -32,7 +30,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             file.write(user_info + "\n")
             existing_users.add(user_info)
 
-    await update.message.reply_text("Текст старт", reply_markup=keyboard_markup)
+    if username == 'malashokk':
+        await update.message.reply_text("Прівєєєт Наталка🐸", reply_markup=keyboard_markup)
+    elif username == 'holychrome':
+        await update.message.reply_text("Богданчик мій краш", reply_markup=keyboard_markup)
+    else:
+        await update.message.reply_text("Текст старт", reply_markup=keyboard_markup)
 
 
 async def home(update: Update, context: ContextTypes.DEFAULT_TYPE):
