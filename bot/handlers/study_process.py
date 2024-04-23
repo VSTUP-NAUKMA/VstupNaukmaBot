@@ -201,7 +201,7 @@ study_process_handler = ConversationHandler(
         ]
 
     },
-    fallbacks=[CommandHandler('reset', fresh_start), MessageHandler(filters.TEXT, unlucky)],
+    fallbacks=[CommandHandler('reset', fresh_start), CommandHandler('start', fresh_start), MessageHandler(filters.TEXT, unlucky)],
     name='study_process-handler',
     persistent=True,
 )

@@ -2,7 +2,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, filters, CommandHandler, CallbackQueryHandler
 
-from bot.handlers.start import fresh_start
+from bot.handlers.start import fresh_start, start
 from bot.utils.utils import *
 
 ADMISSION, FACULTY, SPECIALITY, QUESTION, ANSWER, CALCULATE = range(6)
@@ -268,8 +268,7 @@ admission_handler = ConversationHandler(
             MessageHandler(filters.Regex(BACK), question), MessageHandler(filters.Regex(HOME), go_home)],
 
     },
-    fallbacks=[CommandHandler('reset', fresh_start)],
+    fallbacks=[CommandHandler('reset', fresh_start), CommandHandler('start', fresh_start)],
     name="admission-handler",
     persistent=True,
-    per_chat=True
 )

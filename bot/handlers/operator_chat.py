@@ -212,7 +212,7 @@ operator_chat_handler = ConversationHandler(
             MessageHandler(filters.Regex('Завершити діалог'), go_home),
         ],
     },
-    fallbacks=[CommandHandler('reset', go_fresh_home), MessageHandler(filters.TEXT, unlucky)],
+    fallbacks=[CommandHandler('reset', go_fresh_home), CommandHandler('start', go_fresh_home), MessageHandler(filters.TEXT, unlucky)],
     name='operator_chat-handler',
     persistent=True,
 )

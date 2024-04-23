@@ -43,7 +43,7 @@ student_life_handler = ConversationHandler(
             MessageHandler(filters.Regex(HOME), go_home),
         ],
     },
-    fallbacks=[CommandHandler('reset', fresh_start), MessageHandler(filters.TEXT, unlucky)],
+    fallbacks=[CommandHandler('reset', fresh_start), CommandHandler('start', fresh_start), MessageHandler(filters.TEXT, unlucky)],
     name='student_life-handler',
     persistent=True,
 )

@@ -25,7 +25,6 @@ if __name__ == '__main__':
     application = Application.builder().token(os.getenv('TELEGRAM_BOT_TOKEN')).persistence(
         persistence=persistence).concurrent_updates(True).build()
     button_handler = CallbackQueryHandler(button_callback)
-    application.add_handler(start_handler)
     application.add_handler(operator_chat_handler)
     application.add_handler(dormitory_handler)
     application.add_handler(admission_handler)
@@ -34,6 +33,7 @@ if __name__ == '__main__':
     application.add_handler(study_process_handler)
     application.add_handler(prikoly_handler)
     application.add_handler(vstup_handler)
+    application.add_handler(start_handler)
     application.add_handler(CommandHandler("chat_id", chat_id))
 
     application.add_handler(button_handler)
