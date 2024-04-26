@@ -32,13 +32,18 @@ def get_keyboard(rows, add_back_button=False, add_home_button=False, is_final_me
     return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
 
-async def generic_reply(update, text, buttons, state, back_button=False, home_button=False, back_home_row=False,
+async def generic_reply(update, text, buttons, state, image_path=None, back_button=False, home_button=False,
+                        back_home_row=False,
                         parse_mode=None):
     reply_markup = get_keyboard(buttons, add_back_button=back_button, add_home_button=home_button,
                                 is_final_method=back_home_row)
     if parse_mode:
         await update.message.reply_text(text, reply_markup=reply_markup, parse_mode=parse_mode,
                                         disable_web_page_preview=True)
+    elif image_path:
+        await update.message.reply_text(text, reply_markup=reply_markup)
+        await update.message.reply_photo(photo=image_path, reply_markup=reply_markup)
+
     else:
         await update.message.reply_text(text, reply_markup=reply_markup)
     return state
@@ -70,6 +75,7 @@ def is_chat_id_registered(chat_id):
             if str(chat_id) == line.strip():
                 return True
     return False
+
 
 async def unlucky(update: Update, context: CallbackContext) -> int:
     await update.message.reply_text("""Я тебе не розумію :(
