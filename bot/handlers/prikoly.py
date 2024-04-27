@@ -22,7 +22,7 @@ def load_images(directory):
         print("No files found in directory")
 
 
-load_images("bot/photos")
+load_images("bot/photos/prikoly")
 
 
 def get_random_image():
