@@ -243,7 +243,7 @@ async def score_received(update: Update, context: CallbackContext) -> int:
 
 
 admission_handler = ConversationHandler(
-    entry_points=[MessageHandler(filters.Regex('Вступ на навчання'), admission)],
+    entry_points=[MessageHandler(filters.Regex('Спеціальності академії'), admission)],
     states={
         ADMISSION: [
             MessageHandler(~filters.COMMAND & ~filters.Regex('Назад|На головну') & filters.Regex('.*'), faculty),
