@@ -1,7 +1,5 @@
-import os
-
 from telegram import Update, ReplyKeyboardMarkup
-from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filters, CallbackContext
+from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filters
 
 reply_keyboard = [['Вступ на навчання', 'Система вступу'],
                   ['Студентське життя', 'Навчальний процес'],

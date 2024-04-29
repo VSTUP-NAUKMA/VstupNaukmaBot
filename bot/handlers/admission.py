@@ -3,6 +3,7 @@ from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, filters, CommandHandler, CallbackQueryHandler
 
 from bot.handlers.start import fresh_start, start
+from bot.utils.fields import COUNT_TEXT
 from bot.utils.utils import *
 
 ADMISSION, FACULTY, SPECIALITY, QUESTION, ANSWER, CALCULATE = range(6)
@@ -104,7 +105,7 @@ async def answer(update: Update, context: CallbackContext):
     if not answer_info:
         return await unlucky(update, context)
 
-    return await generic_reply(update, f"{answer_info}", [], ANSWER, back_button=True, home_button=True)
+    return await generic_reply(update, f"{answer_info}", [], ANSWER, back_button=True, home_button=True, back_home_row=True)
 
 
 async def show_specialty_website(update: Update, context: CallbackContext, text):
@@ -114,7 +115,7 @@ async def show_specialty_website(update: Update, context: CallbackContext, text)
             context.user_data.get('question')]
 
     formatted_message = f"{text} [посиланням]({answer_reply})."
-    await generic_reply(update, formatted_message, [], ANSWER, back_button=True, home_button=True,
+    await generic_reply(update, formatted_message, [], ANSWER, back_button=True, home_button=True, back_home_row=True,
                         parse_mode=ParseMode.MARKDOWN)
 
 
@@ -137,7 +138,7 @@ async def calculate(update: Update, context: CallbackContext) -> int:
     context.user_data['coefficients'] = answer_reply
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    await generic_reply(update, "Оберіть бали: ", [], CALCULATE, back_button=True, home_button=True,
+    await generic_reply(update, COUNT_TEXT, [], CALCULATE, back_button=True, home_button=True,
                         back_home_row=True)
     await update.message.reply_text("Предмети: ", reply_markup=reply_markup)
     return CALCULATE
