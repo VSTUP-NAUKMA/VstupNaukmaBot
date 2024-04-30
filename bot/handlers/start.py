@@ -13,8 +13,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     username = user.username or str(user.id)
     first_name = user.first_name or ''
     last_name = user.last_name or ''
-    phone_number = user.phone_number if hasattr(user, 'phone_number') else 'Not provided'
-    user_info = f"{username}, {first_name} {last_name}, {phone_number}"
+    user_info = f"{username}, {first_name} {last_name}"
 
     file_path = "./usernames.txt"
     try:
