@@ -1,9 +1,7 @@
-import os
-
 from telegram import Update, ReplyKeyboardMarkup
-from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filters, CallbackContext
+from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filters
 
-reply_keyboard = [['Вступ на навчання', 'Система вступу'],
+reply_keyboard = [['Спеціальності академії', 'Система вступу'],
                   ['Студентське життя', 'Навчальний процес'],
                   ['Контакти', 'Гуртожитки'],
                   ['Чат-підтримка', 'Хочу приколюху 😜']]
@@ -15,8 +13,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     username = user.username or str(user.id)
     first_name = user.first_name or ''
     last_name = user.last_name or ''
-    phone_number = user.phone_number if hasattr(user, 'phone_number') else 'Not provided'
-    user_info = f"{username}, {first_name} {last_name}, {phone_number}"
+    user_info = f"{username}, {first_name} {last_name}"
 
     file_path = "./usernames.txt"
     try:

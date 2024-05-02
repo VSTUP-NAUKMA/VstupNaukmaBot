@@ -35,7 +35,6 @@ async def connect_with_operator(update: Update, _: CallbackContext) -> int:
     return IN_CONVERSATION
 
 
-
 async def send_to_operator(update: Update, _: CallbackContext) -> int:
     global nickname_counter
     support_chat_id = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
@@ -103,6 +102,7 @@ async def go_home(update: Update, context: CallbackContext) -> int:
     from bot.handlers.start import home
     await home(update, context)
     return ConversationHandler.END
+
 
 async def go_fresh_home(update: Update, context: CallbackContext) -> int:
     user_chat_id = update.effective_chat.id
@@ -212,7 +212,8 @@ operator_chat_handler = ConversationHandler(
             MessageHandler(filters.Regex('Завершити діалог'), go_home),
         ],
     },
-    fallbacks=[CommandHandler('reset', go_fresh_home), CommandHandler('start', go_fresh_home), MessageHandler(filters.TEXT, unlucky)],
+    fallbacks=[CommandHandler('reset', go_fresh_home), CommandHandler('start', go_fresh_home),
+               MessageHandler(filters.TEXT, unlucky)],
     name='operator_chat-handler',
     persistent=True,
 )
