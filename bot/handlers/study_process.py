@@ -97,7 +97,7 @@ async def schedule(update: Update, context: CallbackContext) -> int:
 
 async def mobility(update: Update, context: CallbackContext) -> int:
     return await generic_reply(update, MOBILITY_TEXT, [], OPPORTUNITIES_LAST_CHOICE, back_button=True, home_button=True,
-                               back_home_row=True)
+                               back_home_row=True, parse_mode=ParseMode.MARKDOWN)
 
 
 async def practice(update: Update, context: CallbackContext) -> int:
@@ -107,7 +107,7 @@ async def practice(update: Update, context: CallbackContext) -> int:
 
 async def work(update: Update, context: CallbackContext) -> int:
     return await generic_reply(update, WORK_TEXT, [], OPPORTUNITIES_LAST_CHOICE, back_button=True, home_button=True,
-                               back_home_row=True)
+                               back_home_row=True, parse_mode=ParseMode.MARKDOWN)
 
 
 async def bachelor(update: Update, context: CallbackContext) -> int:
