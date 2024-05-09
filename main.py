@@ -14,7 +14,7 @@ from bot.handlers.prikoly import prikoly_handler
 from bot.handlers.start import start_handler, fresh_start
 from bot.handlers.student_life import student_life_handler
 from bot.handlers.study_process import study_process_handler
-from bot.handlers.vstup import vstup_handler
+
 from bot.utils.config import load_env
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     application.add_handler(contacts_handler)
     application.add_handler(study_process_handler)
     application.add_handler(prikoly_handler)
-    application.add_handler(vstup_handler)
+    # application.add_handler(vstup_handler)
     application.add_handler(start_handler)
     application.add_handler(CommandHandler("chat_id", chat_id))
 

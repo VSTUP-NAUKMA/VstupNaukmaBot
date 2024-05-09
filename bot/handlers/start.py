@@ -1,10 +1,12 @@
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filters
 
-reply_keyboard = [['Спеціальності академії', 'Система вступу'],
-                  ['Студентське життя', 'Навчальний процес'],
-                  ['Контакти', 'Гуртожитки'],
-                  ['Чат-підтримка', 'Хочу приколюху 😜']]
+from bot.utils.fields import START_TEXT
+
+reply_keyboard = [['Спеціальності академії', 'Навчальний процес'],
+                  ['Студентське життя', 'Гуртожитки' ],
+                  ['Контакти', 'Чат-підтримка'],
+                  ['Хочу приколюху 😜']]
 keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
 
 
@@ -27,12 +29,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             file.write(user_info + "\n")
             existing_users.add(user_info)
 
-    if username == 'malashokk':
-        await update.message.reply_text("Прівєєєт Наталка🐸", reply_markup=keyboard_markup)
-    elif username == 'holychrome':
-        await update.message.reply_text("Богданчик мій краш", reply_markup=keyboard_markup)
-    else:
-        await update.message.reply_text("Текст старт", reply_markup=keyboard_markup)
+    await update.message.reply_text(START_TEXT, reply_markup=keyboard_markup)
 
 
 async def home(update: Update, context: ContextTypes.DEFAULT_TYPE):

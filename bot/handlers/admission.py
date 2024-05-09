@@ -93,10 +93,10 @@ async def answer(update: Update, context: CallbackContext):
     answer_info = warehouse.get(context.user_data.get('degree'), {}).get(
         context.user_data.get('faculty'), {}).get(context.user_data.get('speciality'), {}).get(question_key, '')
 
-    if question_key in ['Дисципліни', 'Сайт конкурс', 'Фахове випробування']:
+    if question_key in ['Дисципліни', 'Сайт для перегляду заявок', 'Фахове випробування']:
         message_prefix = {
-            'Дисципліни': 'Дисципліни цієї освітньої програми можна переглянути за',
-            'Сайт конкурс': 'Переглянути перелік минулорічних заявок, поданих на цю спеціальність, можеш за',
+            'Дисципліни': 'Дисципліни цієї освітньої програми можеш переглянути за',
+            'Сайт для перегляду заявок': 'Переглянути перелік минулорічних заявок, поданих на цю спеціальність, можеш за',
             'Фахове випробування': '⏰ З програмою фахового вступного випробування в 2023 можеш ознайомитись за'
         }
         await show_specialty_website(update, context, message_prefix[question_key])
@@ -139,7 +139,7 @@ async def calculate(update: Update, context: CallbackContext) -> int:
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     await generic_reply(update, COUNT_TEXT, [], CALCULATE, back_button=True, home_button=True,
-                        back_home_row=True)
+                        back_home_row=True, parse_mode=ParseMode.MARKDOWN)
     await update.message.reply_text("Предмети: ", reply_markup=reply_markup)
     return CALCULATE
 

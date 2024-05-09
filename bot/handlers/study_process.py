@@ -1,4 +1,5 @@
 from telegram import Update
+from telegram.constants import ParseMode
 from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters, CommandHandler
 
 from bot.handlers.contacts import go_home
@@ -111,12 +112,12 @@ async def work(update: Update, context: CallbackContext) -> int:
 
 async def bachelor(update: Update, context: CallbackContext) -> int:
     return await generic_reply(update, SERT_BACHELOR, [], PROGRAMS_LAST_CHOICE, back_button=True, home_button=True,
-                               back_home_row=True, parse_mode='Markdown')
+                               back_home_row=True, parse_mode=ParseMode.MARKDOWN)
 
 
 async def master(update: Update, context: CallbackContext) -> int:
     return await generic_reply(update, SERT_MASTER, [], PROGRAMS_LAST_CHOICE, back_button=True, home_button=True,
-                               back_home_row=True, parse_mode='Markdown')
+                               back_home_row=True, parse_mode=ParseMode.MARKDOWN)
 
 
 async def buildings(update: Update, context: CallbackContext) -> int:

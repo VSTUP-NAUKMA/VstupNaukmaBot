@@ -22,13 +22,13 @@ async def masters(update: Update, context: CallbackContext) -> int:
 
 async def bachelors(update: Update, context: CallbackContext) -> int:
     buttons = [['Троєщина', 'Харківське шосе', 'Джона Маккейна']]
-    return await generic_reply(update, 'Бакалаврат: Оберіть гуртожиток', buttons, BACHELORS, back_button=True,
+    return await generic_reply(update, 'Оберіть гуртожиток:', buttons, BACHELORS, back_button=True,
                                home_button=True)
 
 
 async def orders(update: Update, context: CallbackContext) -> int:
     buttons = [['Поселення, вартість та оплата', 'Перелік документів']]
-    return await generic_reply(update, 'Поселення: Оберіть опцію', buttons, ORDERS, back_button=True, home_button=True)
+    return await generic_reply(update, 'Оберіть категорію:', buttons, ORDERS, back_button=True, home_button=True)
 
 
 async def advices(update: Update, context: CallbackContext) -> int:
