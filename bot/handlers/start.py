@@ -11,10 +11,11 @@ keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.message.from_user
+    chat_id = update.message.chat_id  # Додавання chat_id
     username = user.username or str(user.id)
     first_name = user.first_name or ''
     last_name = user.last_name or ''
-    user_info = f"{username}, {first_name} {last_name}"
+    user_info = f"{chat_id}, {username}, {first_name} {last_name}"  # Додавання chat_id до інформації про користувача
 
     file_path = "./usernames.txt"
     try:
