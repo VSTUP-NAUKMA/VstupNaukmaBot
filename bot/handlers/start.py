@@ -3,10 +3,9 @@ from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filt
 
 from bot.utils.fields import START_TEXT
 
-reply_keyboard = [['Спеціальності академії', 'Навчальний процес'],
+reply_keyboard = [['Спеціальності Академії', 'Навчальний процес'],
                   ['Студентське життя', 'Гуртожитки' ],
-                  ['Контакти', 'Чат-підтримка'],
-                  ['Хочу приколюху 😜']]
+                  ['Контакти', 'Хочу приколюху 😜']]
 keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
 
 

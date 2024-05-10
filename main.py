@@ -8,8 +8,8 @@ from telegram.ext import Application, CallbackQueryHandler, PicklePersistence, C
 from bot.handlers.admission import admission_handler
 from bot.handlers.contacts import contacts_handler
 from bot.handlers.dormitory import dormitory_handler
-from bot.handlers.operator_chat import reply_handler, button_callback, clear_pending_replies, operator_chat_handler, \
-    chat_id
+# from bot.handlers.operator_chat import reply_handler, button_callback, clear_pending_replies, operator_chat_handler, \
+#     chat_id
 from bot.handlers.prikoly import prikoly_handler
 from bot.handlers.start import start_handler, fresh_start
 from bot.handlers.student_life import student_life_handler
@@ -24,8 +24,8 @@ if __name__ == '__main__':
     persistence = PicklePersistence(filepath="bot.pickle")
     application = Application.builder().token(os.getenv('TELEGRAM_BOT_TOKEN')).persistence(
         persistence=persistence).concurrent_updates(True).build()
-    button_handler = CallbackQueryHandler(button_callback)
-    application.add_handler(operator_chat_handler)
+    # button_handler = CallbackQueryHandler(button_callback)
+    # application.add_handler(operator_chat_handler)
     application.add_handler(dormitory_handler)
     application.add_handler(admission_handler)
     application.add_handler(student_life_handler)
@@ -34,13 +34,13 @@ if __name__ == '__main__':
     application.add_handler(prikoly_handler)
     # application.add_handler(vstup_handler)
     application.add_handler(start_handler)
-    application.add_handler(CommandHandler("chat_id", chat_id))
-
-    application.add_handler(button_handler)
-    application.add_handler(reply_handler)
-
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    loop.create_task(clear_pending_replies(86400))  # 24 hours
+    # application.add_handler(CommandHandler("chat_id", chat_id))
+    #
+    # application.add_handler(button_handler)
+    # application.add_handler(reply_handler)
+    #
+    # loop = asyncio.new_event_loop()
+    # asyncio.set_event_loop(loop)
+    # loop.create_task(clear_pending_replies(86400))  # 24 hours
 
     application.run_polling(allowed_updates=Update.ALL_TYPES)
