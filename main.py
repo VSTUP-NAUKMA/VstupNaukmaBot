@@ -11,6 +11,7 @@ from bot.handlers.dormitory import dormitory_handler
 from bot.handlers.operator_chat import reply_handler, button_callback, clear_pending_replies, operator_chat_handler, \
     chat_id
 from bot.handlers.prikoly import prikoly_handler
+from bot.handlers.send_message import broadcast_handler
 from bot.handlers.start import start_handler
 from bot.handlers.student_life import student_life_handler
 from bot.handlers.study_process import study_process_handler
@@ -35,6 +36,7 @@ if __name__ == '__main__':
     application.add_handler(vstup_handler)
     application.add_handler(start_handler)
     application.add_handler(CommandHandler("chat_id", chat_id))
+    application.add_handler(broadcast_handler)
 
     application.add_handler(button_handler)
     application.add_handler(reply_handler)
