@@ -1,7 +1,12 @@
-from telegram import Update, ForceReply
+from telegram import Update, ForceReply, ReplyKeyboardMarkup
 from telegram.ext import CallbackContext, ConversationHandler, CommandHandler, MessageHandler, filters
 
 GET_MESSAGE, CONFIRMATION = range(2)
+reply_keyboard = [['Спеціальності Академії', 'Система вступу'],
+                  ['Студентське життя', 'Навчальний процес'],
+                  ['Контакти', 'Гуртожитки'],
+                  ['Чат-підтримка', 'Хочу приколюху 😜']]
+keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
 
 
 async def start_broadcast(update: Update, context: CallbackContext) -> int:
@@ -27,9 +32,9 @@ async def send_broadcast(update: Update, context: CallbackContext) -> int:
         for chat_id in chat_ids:
             print(chat_id)
             await context.bot.send_message(chat_id=chat_id, text=message)
-        await update.message.reply_text('Повідомлення відправлено всім користувачам.')
+        await update.message.reply_text('Повідомлення відправлено всім користувачам.', reply_markup=keyboard_markup)
     else:
-        await update.message.reply_text('Розсилка скасована.')
+        await update.message.reply_text('Розсилка скасована.', reply_markup=keyboard_markup)
     return ConversationHandler.END
 
 
