@@ -12,7 +12,7 @@ keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.message.from_user
-    chat_id = update.message.chat_id  # Додавання chat_id
+    chat_id = update.message.chat_id
     username = user.username or str(user.id)
     first_name = user.first_name or ''
     last_name = user.last_name or ''

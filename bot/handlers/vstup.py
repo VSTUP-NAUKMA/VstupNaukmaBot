@@ -1,7 +1,9 @@
 from telegram import Update
+from telegram.constants import ParseMode
 from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters, CommandHandler
 
 from bot.handlers.start import fresh_start
+from bot.utils.fields import *
 from bot.utils.utils import generic_reply, go_home, unlucky
 
 BACK = 'Назад'
@@ -68,13 +70,13 @@ async def description_end(update: Update, context: CallbackContext) -> int:
     if context.user_data.get('level') == 'Бакалаврат':
         match update.message.text:
             case 'Бюджет':
-                text = 'Опис бакалаврат бюджет:'
+                text = BACHELOR_BUDGET_DESCRIPTION_TEXT
                 return await generic_reply(update, text, [], ENTRY_DESCRIPTION_END, back_button=True, home_button=True,
-                                           back_home_row=True)
+                                           back_home_row=True, parse_mode=ParseMode.MARKDOWN)
             case 'Контракт':
-                text = 'Опис бакалаврат контракт:'
+                text = BACHELOR_CONTRACT_DESCRIPTION_TEXT
                 return await generic_reply(update, text, [], ENTRY_DESCRIPTION_END, back_button=True, home_button=True,
-                                           back_home_row=True)
+                                           back_home_row=True, parse_mode=ParseMode.MARKDOWN)
     else:
         match update.message.text:
             case 'На основі бакалаврату':
@@ -97,13 +99,13 @@ async def entry_dates_end(update: Update, context: CallbackContext) -> int:
     if context.user_data.get('level') == 'Бакалаврат':
         match update.message.text:
             case 'Бюджет':
-                text = 'Дати бакалаврат бюджет:'
+                text = DATES_BACHELOR_BUDGET_TEXT
                 return await generic_reply(update, text, [], ENTRY_DATES_END, back_button=True, home_button=True,
-                                           back_home_row=True)
+                                           back_home_row=True, parse_mode=ParseMode.MARKDOWN)
             case 'Контракт':
-                text = 'Дати бакалаврат контракт:'
+                text = DATES_BACHELOR_CONTRACT_TEXT
                 return await generic_reply(update, text, [], ENTRY_DATES_END, back_button=True, home_button=True,
-                                           back_home_row=True)
+                                           back_home_row=True, parse_mode=ParseMode.MARKDOWN)
     else:
         match update.message.text:
             case 'Бюджет':
@@ -157,13 +159,13 @@ async def applicant_cabinet_end(update: Update, context: CallbackContext) -> int
     if context.user_data.get('level') == 'Бакалаврат':
         match update.message.text:
             case 'Реєстрація':
-                text = 'Текст реєстрація бакалаврат'
+                text = BACHELOR_CABINET_TEXT
                 return await generic_reply(update, text, [], APPLICANT_CABINET_END, back_button=True, home_button=True,
-                                           back_home_row=True)
+                                           back_home_row=True, parse_mode=ParseMode.MARKDOWN)
             case 'Подача заявок':
-                text = 'Подача заявок бакалаврат'
+                text = APPLICATIONS_BACHELOR_TEXT
                 return await generic_reply(update, text, [], APPLICANT_CABINET_END, back_button=True, home_button=True,
-                                           back_home_row=True)
+                                           back_home_row=True, parse_mode=ParseMode.MARKDOWN)
     else:
         match update.message.text:
             case 'Реєстрація':
@@ -178,20 +180,20 @@ async def applicant_cabinet_end(update: Update, context: CallbackContext) -> int
 
 async def motivational_letter(update: Update, context: CallbackContext) -> int:
     if context.user_data.get('level') == 'Бакалаврат':
-        text = 'Текст лист бакалаврат'
+        text = MOTIVATION_BACHELOR_TEXT
     else:
         text = 'Текст лист магістратура'
     return await generic_reply(update, text, [], VSTUP_END, back_button=True, home_button=True,
-                               back_home_row=True)
+                               back_home_row=True, parse_mode=ParseMode.MARKDOWN)
 
 
 async def entry_documents(update: Update, context: CallbackContext) -> int:
     if context.user_data.get('level') == 'Бакалаврат':
-        text = 'Текст доки бакалаврат'
+        text = BACHELOR_DOCUMENTS_TEXT
     else:
         text = 'Текст доки магістр'
     return await generic_reply(update, text, [], VSTUP_END, back_button=True, home_button=True,
-                               back_home_row=True)
+                               back_home_row=True, parse_mode=ParseMode.MARKDOWN)
 
 
 vstup_handler = ConversationHandler(

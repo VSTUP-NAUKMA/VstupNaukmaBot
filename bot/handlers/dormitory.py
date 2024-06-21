@@ -11,7 +11,7 @@ DORMITORY, MASTERS, BACHELORS, ORDERS, PRICE, GURTO, DOCUMENT_REVIEW, VORZEL, AD
 
 
 async def dormitory(update: Update, context: CallbackContext) -> int:
-    buttons = [['Для магістрів', 'Для бакалаврів'], ['Поселення', 'Поради']]
+    buttons = [['Для бакалаврів', 'Для магістрів'], ['Поселення', 'Поради']]
     return await generic_reply(update, 'Оберіть категорію:', buttons, DORMITORY, back_button=True)
 
 
