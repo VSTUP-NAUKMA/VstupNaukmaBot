@@ -80,13 +80,13 @@ async def description_end(update: Update, context: CallbackContext) -> int:
     else:
         match update.message.text:
             case 'На основі бакалаврату':
-                text = 'Опис магістратура бакалаврат:'
+                text = APPLICATIONS_MASTER_ON_BACHELOR
                 return await generic_reply(update, text, [], ENTRY_DESCRIPTION_END, back_button=True, home_button=True,
-                                           back_home_row=True)
+                                           back_home_row=True, parse_mode=ParseMode.MARKDOWN)
             case 'На основі магістратури':
-                text = 'Опис магістратура магістратура:'
+                text = APPLICATIONS_MASTER_ON_MASTER
                 return await generic_reply(update, text, [], ENTRY_DESCRIPTION_END, back_button=True, home_button=True,
-                                           back_home_row=True)
+                                           back_home_row=True, parse_mode=ParseMode.MARKDOWN)
 
 
 async def entry_dates(update: Update, context: CallbackContext) -> int:
@@ -109,13 +109,13 @@ async def entry_dates_end(update: Update, context: CallbackContext) -> int:
     else:
         match update.message.text:
             case 'Бюджет':
-                text = 'Дати магістратура бюджет:'
+                text = DATES_MASTER_BUDGET_TEXT
                 return await generic_reply(update, text, [], ENTRY_DATES_END, back_button=True, home_button=True,
-                                           back_home_row=True)
+                                           back_home_row=True, parse_mode=ParseMode.MARKDOWN)
             case 'Контракт':
-                text = 'Дати магістратура контракт:'
+                text = DATES_MASTER_CONTRACT_TEXT
                 return await generic_reply(update, text, [], ENTRY_DATES_END, back_button=True, home_button=True,
-                                           back_home_row=True)
+                                           back_home_row=True, parse_mode=ParseMode.MARKDOWN)
 
 
 async def entry_exams(update: Update, context: CallbackContext) -> int:
@@ -127,32 +127,32 @@ async def entry_exams(update: Update, context: CallbackContext) -> int:
 async def entry_exams_end(update: Update, context: CallbackContext) -> int:
     match update.message.text:
         case 'ЄВІ':
-            text = 'Текст ЄВІ:'
+            text = MASTER_EVI
             return await generic_reply(update, text, [], ENTRY_EXAM_END, back_button=True, home_button=True,
-                                       back_home_row=True)
+                                       back_home_row=True, parse_mode=ParseMode.MARKDOWN)
         case 'ЄФВВ':
-            text = 'Текст ЄФВВ:'
+            text = MASTER_EFVV
             return await generic_reply(update, text, [], ENTRY_EXAM_END, back_button=True, home_button=True,
-                                       back_home_row=True)
+                                       back_home_row=True, parse_mode=ParseMode.MARKDOWN)
         case 'Фаховий іспит':
-            text = 'Текст Фаховий іспит:'
+            text = MASTER_EXAM
             return await generic_reply(update, text, [], ENTRY_EXAM_END, back_button=True, home_button=True,
-                                       back_home_row=True)
+                                       back_home_row=True, parse_mode=ParseMode.MARKDOWN)
         case 'Реєстрація':
-            text = 'Текст Реєстрація:'
+            text = MASTER_REGISTRATION
             return await generic_reply(update, text, [], ENTRY_EXAM_END, back_button=True, home_button=True,
                                        back_home_row=True)
         case 'Дати проведення':
-            text = 'Дати проведення:'
+            text = DATES_MASTER_TEXT
             return await generic_reply(update, text, [], ENTRY_EXAM_END, back_button=True, home_button=True,
-                                       back_home_row=True)
+                                       back_home_row=True, parse_mode=ParseMode.MARKDOWN)
 
 
 async def applicant_cabinet(update: Update, context: CallbackContext) -> int:
     text = 'Оберіть категорію:'
     buttons = CATEGORY_BUTTONS['cabinet']
     return await generic_reply(update, text, buttons, APPLICANT_CABINET_NEXT, back_button=True,
-                               home_button=True)
+                               home_button=True, parse_mode=ParseMode.MARKDOWN)
 
 
 async def applicant_cabinet_end(update: Update, context: CallbackContext) -> int:
@@ -169,20 +169,20 @@ async def applicant_cabinet_end(update: Update, context: CallbackContext) -> int
     else:
         match update.message.text:
             case 'Реєстрація':
-                text = 'Текст реєстрація магістр'
+                text = MASTER_CABINET_TEXT
                 return await generic_reply(update, text, [], APPLICANT_CABINET_END, back_button=True, home_button=True,
-                                           back_home_row=True)
+                                           back_home_row=True, parse_mode=ParseMode.MARKDOWN)
             case 'Подача заявок':
-                text = 'Подача заявок магістр'
+                text = APPLICATIONS_MASTER_TEXT
                 return await generic_reply(update, text, [], APPLICANT_CABINET_END, back_button=True, home_button=True,
-                                           back_home_row=True)
+                                           back_home_row=True, parse_mode=ParseMode.MARKDOWN)
 
 
 async def motivational_letter(update: Update, context: CallbackContext) -> int:
     if context.user_data.get('level') == 'Бакалаврат':
         text = MOTIVATION_BACHELOR_TEXT
     else:
-        text = 'Текст лист магістратура'
+        text = MOTIVATION_MASTER_TEXT
     return await generic_reply(update, text, [], VSTUP_END, back_button=True, home_button=True,
                                back_home_row=True, parse_mode=ParseMode.MARKDOWN)
 
@@ -191,7 +191,7 @@ async def entry_documents(update: Update, context: CallbackContext) -> int:
     if context.user_data.get('level') == 'Бакалаврат':
         text = BACHELOR_DOCUMENTS_TEXT
     else:
-        text = 'Текст доки магістр'
+        text = MASTER_DOCUMENTS_TEXT
     return await generic_reply(update, text, [], VSTUP_END, back_button=True, home_button=True,
                                back_home_row=True, parse_mode=ParseMode.MARKDOWN)
 
