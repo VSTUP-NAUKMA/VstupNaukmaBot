@@ -121,7 +121,7 @@ async def master(update: Update, context: CallbackContext) -> int:
 
 
 async def buildings(update: Update, context: CallbackContext) -> int:
-    return await generic_reply(update, BUILDINGS_TEXT, [], CAMPUS_LAST_CHOICE,'bot/photos/641dc1d386d171855dc2c.png', back_button=True, home_button=True,
+    return await generic_reply(update, BUILDINGS_TEXT, [], CAMPUS_LAST_CHOICE,'bot/photos/2024-06-03 17.15.55.jpg', back_button=True, home_button=True,
                                back_home_row=True)
 
 
