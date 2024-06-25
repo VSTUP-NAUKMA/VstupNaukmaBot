@@ -118,8 +118,10 @@ async def button_callback(update: Update, _: CallbackContext) -> None:
         await query.answer('А всьо не можна більше :(')
         return
     if query.data == 'not_pressed':
+        await query.answer()
         await query.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(
             [[InlineKeyboardButton(text=query.from_user.username, callback_data='already_pressed')]]))
+        return
 
 
 async def forward_reply_to_user(update: Update, _: CallbackContext) -> None:
