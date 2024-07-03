@@ -1,3 +1,4 @@
+import telegram
 from telegram import Update, ForceReply, ReplyKeyboardMarkup
 from telegram.ext import CallbackContext, ConversationHandler, CommandHandler, MessageHandler, filters
 
@@ -29,10 +30,21 @@ async def send_broadcast(update: Update, context: CallbackContext) -> int:
     if answer == 'так':
         message = context.user_data['message']
         chat_ids = read_chat_ids('usernames.txt')
+        success_count = 0
+        fail_count = 0
         for chat_id in chat_ids:
-            print(chat_id)
-            await context.bot.send_message(chat_id=chat_id, text=message)
-        await update.message.reply_text('Повідомлення відправлено всім користувачам.', reply_markup=keyboard_markup)
+            try:
+                await context.bot.send_message(chat_id=chat_id, text=message)
+                success_count += 1
+            except telegram.error.Forbidden:
+                fail_count += 1
+                print(f"Failed to send message to {chat_id}: bot was blocked by the user")
+            except Exception as e:
+                fail_count += 1
+                print(f"Failed to send message to {chat_id}: {e}")
+
+        await update.message.reply_text(f'Повідомлення відправлено {success_count} користувачам. '
+                                        f'Не вдалося відправити {fail_count} користувачам.', reply_markup=keyboard_markup)
     else:
         await update.message.reply_text('Розсилка скасована.', reply_markup=keyboard_markup)
     return ConversationHandler.END
