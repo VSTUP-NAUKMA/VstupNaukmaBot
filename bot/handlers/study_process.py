@@ -1,3 +1,5 @@
+import os
+
 from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters, CommandHandler
@@ -14,6 +16,10 @@ PROCESS, OPPORTUNITIES, FEATURES, DIFFERENCE, FEATURES_LAST_CHOICE, OPPORTUNITIE
 
 
 async def process(update: Update, context: CallbackContext) -> int:
+    TELEGRAM_SUPPORT_CHAT_ID = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
+    chat_id = update.message.chat_id
+    if int(chat_id) == int(TELEGRAM_SUPPORT_CHAT_ID):
+        return
     buttons = [
         ['Особливості навчання в НаУКМА', 'Сертифікатні програми'],
         ['Кампус', 'Можливості'],

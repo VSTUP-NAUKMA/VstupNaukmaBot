@@ -29,6 +29,10 @@ async def go_home(update: Update, context: CallbackContext) -> int:
 
 
 async def admission(update: Update, context: CallbackContext) -> int:
+    TELEGRAM_SUPPORT_CHAT_ID = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
+    chat_id = update.message.chat_id
+    if int(chat_id) == int(TELEGRAM_SUPPORT_CHAT_ID):
+        return
     buttons = [['Бакалаврат', 'Магістратура']]
     return await generic_reply(update, 'Оберіть категорію:', buttons, ADMISSION, back_button=True)
 

@@ -22,6 +22,10 @@ async def clear_pending_replies(interval: int):
 
 
 async def connect_with_operator(update: Update, _: CallbackContext) -> int:
+    TELEGRAM_SUPPORT_CHAT_ID = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
+    chat_id = update.message.chat_id
+    if int(chat_id) == int(TELEGRAM_SUPPORT_CHAT_ID):
+        return
     keyboard = [
         [
             KeyboardButton('Завершити діалог'),
