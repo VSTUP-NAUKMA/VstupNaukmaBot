@@ -11,33 +11,35 @@ reply_keyboard = [['Спеціальності Академії', 'Систем�
                   ['Чат-підтримка', 'Хочу приколюху 😜']]
 keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
 
-TELEGRAM_SUPPORT_CHAT_ID = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    TELEGRAM_SUPPORT_CHAT_ID = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
     chat_id = update.message.chat_id
-    if chat_id == TELEGRAM_SUPPORT_CHAT_ID:
+    if int(chat_id) == int(TELEGRAM_SUPPORT_CHAT_ID):
         await update.message.reply_text("Команда start недоступна в цьому чаті.")
         return
+    else:
+        user = update.message.from_user
+        username = user.username or str(user.id)
+        first_name = user.first_name or ''
+        last_name = user.last_name or ''
+        user_info = f"{chat_id}, {username}, {first_name} {last_name}"  # Додавання chat_id до інформації про користувача
 
-    user = update.message.from_user
-    username = user.username or str(user.id)
-    first_name = user.first_name or ''
-    last_name = user.last_name or ''
-    user_info = f"{chat_id}, {username}, {first_name} {last_name}"  # Додавання chat_id до інформації про користувача
+        file_path = "./usernames.txt"
+        try:
+            with open(file_path, "r", encoding='utf-8') as file:
+                existing_users = set(file.read().splitlines())
+        except FileNotFoundError:
+            existing_users = set()
 
-    file_path = "./usernames.txt"
-    try:
-        with open(file_path, "r", encoding='utf-8') as file:
-            existing_users = set(file.read().splitlines())
-    except FileNotFoundError:
-        existing_users = set()
+        if user_info not in existing_users:
+            with open(file_path, "a", encoding='utf-8') as file:
+                file.write(user_info + "\n")
+                existing_users.add(user_info)
 
-    if user_info not in existing_users:
-        with open(file_path, "a", encoding='utf-8') as file:
-            file.write(user_info + "\n")
-            existing_users.add(user_info)
+        await update.message.reply_text(START_TEXT, reply_markup=keyboard_markup)
 
-    await update.message.reply_text(START_TEXT, reply_markup=keyboard_markup)
 
 
 async def home(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -46,8 +48,9 @@ async def home(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def fresh_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    TELEGRAM_SUPPORT_CHAT_ID = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
     chat_id = update.message.chat_id
-    if chat_id == TELEGRAM_SUPPORT_CHAT_ID:
+    if int(chat_id) == int(TELEGRAM_SUPPORT_CHAT_ID):
         await update.message.reply_text("Команда freshstart недоступна в цьому чаті.")
         return
 
