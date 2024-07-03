@@ -61,7 +61,7 @@ async def fresh_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 start_handler = ConversationHandler(
-    entry_points=[MessageHandler(filters.Regex('start'), start)],
+    entry_points=[MessageHandler(filters.Regex('^/start$'), start)],
     states={
     },
     fallbacks=[],

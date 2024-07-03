@@ -52,7 +52,7 @@ async def send_meme(update: Update, context: CallbackContext) -> int:
 
 
 prikoly_handler = ConversationHandler(
-    entry_points=[MessageHandler(filters.Regex('Хочу приколюху 😜'), send_meme)],
+    entry_points=[MessageHandler(filters.Regex('^Хочу приколюху 😜$'), send_meme)],
     states={},
     fallbacks=[CommandHandler('reset', fresh_start), MessageHandler(filters.TEXT, unlucky)],
     name='prikoly-handler',

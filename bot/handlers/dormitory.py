@@ -69,7 +69,7 @@ async def document_review(update: Update, context: CallbackContext) -> int:
 
 
 dormitory_handler = ConversationHandler(
-    entry_points=[MessageHandler(filters.Regex('Гуртожитки'), dormitory)],
+    entry_points=[MessageHandler(filters.Regex('^Гуртожитки$'), dormitory)],
     states={
         DORMITORY: [
             MessageHandler(filters.Regex('Для магістрів'), masters),
@@ -112,7 +112,7 @@ dormitory_handler = ConversationHandler(
             MessageHandler(filters.Regex(HOME), go_home),
         ]
     },
-    fallbacks=[CommandHandler('reset', fresh_start), CommandHandler('start', fresh_start), MessageHandler(filters.TEXT, unlucky)],
+    fallbacks=[CommandHandler('reset', fresh_start), MessageHandler(filters.Regex('^/start$'), fresh_start), MessageHandler(filters.TEXT, unlucky)],
     name='dormitory-handler',
     persistent=True,
 )

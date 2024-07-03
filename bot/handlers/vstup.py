@@ -203,7 +203,7 @@ async def entry_documents(update: Update, context: CallbackContext) -> int:
 
 
 vstup_handler = ConversationHandler(
-    entry_points=[MessageHandler(filters.Regex('Система вступу'), select_level)],
+    entry_points=[MessageHandler(filters.Regex('^Система вступу$'), select_level)],
     states={
         SELECT_LEVEL: [
             MessageHandler(filters.Regex('Бакалаврат|Магістратура'), set_education_level),
@@ -262,7 +262,7 @@ vstup_handler = ConversationHandler(
             MessageHandler(filters.Regex(HOME), go_home),
         ]
     },
-    fallbacks=[CommandHandler('reset', fresh_start), CommandHandler('start', fresh_start),
+    fallbacks=[CommandHandler('reset', fresh_start), MessageHandler(filters.Regex('^/start$'), fresh_start),
                MessageHandler(filters.TEXT, unlucky)],
     name='vstup_handler',
     persistent=True,

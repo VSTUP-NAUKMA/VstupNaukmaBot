@@ -33,7 +33,7 @@ async def so(update: Update, context: CallbackContext) -> int:
 
 
 student_life_handler = ConversationHandler(
-    entry_points=[MessageHandler(filters.Regex('Студентське життя'), student_life)],
+    entry_points=[MessageHandler(filters.Regex('^Студентське життя$'), student_life)],
     states={
         STUDENTLIFE: [
             MessageHandler(filters.Regex('Органи студентського самоврядування'), oss),
@@ -49,7 +49,7 @@ student_life_handler = ConversationHandler(
             MessageHandler(filters.Regex(HOME), go_home),
         ],
     },
-    fallbacks=[CommandHandler('reset', fresh_start), CommandHandler('start', fresh_start),
+    fallbacks=[CommandHandler('reset', fresh_start), MessageHandler(filters.Regex('^/start$'), fresh_start),
                MessageHandler(filters.TEXT, unlucky)],
     name='student_life-handler',
     persistent=True,

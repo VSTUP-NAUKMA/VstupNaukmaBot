@@ -138,7 +138,7 @@ async def chill_zones(update: Update, context: CallbackContext) -> int:
 
 # Структура ConversationHandler
 study_process_handler = ConversationHandler(
-    entry_points=[MessageHandler(filters.Regex('Навчальний процес'), process)],
+    entry_points=[MessageHandler(filters.Regex('^Навчальний процес$'), process)],
     states={
         PROCESS: [
             MessageHandler(filters.Regex('Особливості навчання в НаУКМА'), features),
@@ -208,7 +208,7 @@ study_process_handler = ConversationHandler(
         ]
 
     },
-    fallbacks=[CommandHandler('reset', fresh_start), CommandHandler('start', fresh_start), MessageHandler(filters.TEXT, unlucky)],
+    fallbacks=[CommandHandler('reset', fresh_start), MessageHandler(filters.Regex('^/start$'), fresh_start), MessageHandler(filters.TEXT, unlucky)],
     name='study_process-handler',
     persistent=True,
 )

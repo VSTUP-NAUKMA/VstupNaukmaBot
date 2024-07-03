@@ -23,14 +23,14 @@ async def contacts(update: Update, context: CallbackContext) -> int:
 
 
 contacts_handler = ConversationHandler(
-    entry_points=[MessageHandler(filters.Regex('Контакти'), contacts)],
+    entry_points=[MessageHandler(filters.Regex('^Контакти$'), contacts)],
     states={
         CONTACTS: [
             MessageHandler(filters.Regex(BACK), go_home),
         ],
 
     },
-    fallbacks=[CommandHandler('reset', fresh_start), CommandHandler('start', fresh_start),
+    fallbacks=[CommandHandler('reset', fresh_start), MessageHandler(filters.Regex('^/start$'), fresh_start),
                MessageHandler(filters.TEXT, unlucky)],
     name='contacts-handler',
     persistent=True,
