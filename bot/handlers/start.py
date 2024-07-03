@@ -1,3 +1,5 @@
+import os
+
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filters
 
@@ -9,10 +11,15 @@ reply_keyboard = [['Спеціальності Академії', 'Систем�
                   ['Чат-підтримка', 'Хочу приколюху 😜']]
 keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
 
+TELEGRAM_SUPPORT_CHAT_ID = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user = update.message.from_user
     chat_id = update.message.chat_id
+    if chat_id == TELEGRAM_SUPPORT_CHAT_ID:
+        await update.message.reply_text("Команда start недоступна в цьому чаті.")
+        return
+
+    user = update.message.from_user
     username = user.username or str(user.id)
     first_name = user.first_name or ''
     last_name = user.last_name or ''
@@ -39,6 +46,11 @@ async def home(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def fresh_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.message.chat_id
+    if chat_id == TELEGRAM_SUPPORT_CHAT_ID:
+        await update.message.reply_text("Команда freshstart недоступна в цьому чаті.")
+        return
+
     context.user_data.clear()
     await update.message.reply_text("Ваші дані та стан були успішно скинуті. Почнемо знову!")
     await start(update, context)
