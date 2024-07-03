@@ -1,3 +1,5 @@
+import os
+
 from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters, CommandHandler
 
@@ -13,6 +15,10 @@ buttons = [['Органи студентського самоврядуванн�
 
 
 async def student_life(update: Update, context: CallbackContext) -> int:
+    TELEGRAM_SUPPORT_CHAT_ID = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
+    chat_id = update.message.chat_id
+    if int(chat_id) == int(TELEGRAM_SUPPORT_CHAT_ID):
+        return
     return await generic_reply(update, 'Оберіть категорію:', buttons, STUDENTLIFE, back_button=True)
 
 

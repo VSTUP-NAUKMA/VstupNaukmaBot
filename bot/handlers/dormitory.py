@@ -1,3 +1,5 @@
+import os
+
 from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, MessageHandler, filters
 
@@ -11,6 +13,10 @@ DORMITORY, MASTERS, BACHELORS, ORDERS, PRICE, GURTO, DOCUMENT_REVIEW, VORZEL, AD
 
 
 async def dormitory(update: Update, context: CallbackContext) -> int:
+    TELEGRAM_SUPPORT_CHAT_ID = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
+    chat_id = update.message.chat_id
+    if int(chat_id) == int(TELEGRAM_SUPPORT_CHAT_ID):
+        return
     buttons = [['Для бакалаврів', 'Для магістрів'], ['Поселення', 'Поради']]
     return await generic_reply(update, 'Оберіть категорію:', buttons, DORMITORY, back_button=True)
 

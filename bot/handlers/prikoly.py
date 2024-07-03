@@ -40,6 +40,10 @@ KEYBOARD_MARKUP = ReplyKeyboardMarkup(REPLY_KEYBOARD, resize_keyboard=True)
 
 
 async def send_meme(update: Update, context: CallbackContext) -> int:
+    TELEGRAM_SUPPORT_CHAT_ID = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
+    chat_id = update.message.chat_id
+    if int(chat_id) == int(TELEGRAM_SUPPORT_CHAT_ID):
+        return
     user = update.message.from_user
     username = user.username
     await update.message.reply_photo(await get_random_image(), reply_markup=KEYBOARD_MARKUP)

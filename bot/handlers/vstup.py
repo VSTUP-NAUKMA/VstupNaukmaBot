@@ -1,3 +1,5 @@
+import os
+
 from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import CallbackContext, ConversationHandler, MessageHandler, filters, CommandHandler
@@ -38,6 +40,10 @@ CATEGORY_BUTTONS_REGEX = {key: '|'.join([btn for sublist in val for btn in subli
 
 
 async def select_level(update: Update, context: CallbackContext) -> int:
+    TELEGRAM_SUPPORT_CHAT_ID = os.getenv('TELEGRAM_SUPPORT_CHAT_ID')
+    chat_id = update.message.chat_id
+    if int(chat_id) == int(TELEGRAM_SUPPORT_CHAT_ID):
+        return
     return await generic_reply(update, 'Оберіть категорію:', CATEGORY_BUTTONS['education'], SELECT_LEVEL,
                                back_button=True)
 
