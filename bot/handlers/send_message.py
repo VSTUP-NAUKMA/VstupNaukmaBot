@@ -11,7 +11,7 @@ keyboard_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
 
 
 async def start_broadcast(update: Update, context: CallbackContext) -> int:
-    if update.effective_user.username == 'zhenyettta':
+    if update.effective_user.username in ['zhenyettta', 'malashokk']:
         await update.message.reply_text('Введіть повідомлення для розсилки:', reply_markup=ForceReply(selective=True))
         return GET_MESSAGE
     else:
